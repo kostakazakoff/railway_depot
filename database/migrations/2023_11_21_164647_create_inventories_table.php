@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('article_id');
             $table->unsignedBigInteger('store_id');
             $table->integer('quantity');
-            $table->string('package');
+            $table->string('package')->nullable();
             $table->string('position');
             $table->timestamps();
 

@@ -22,6 +22,7 @@ Route::controller(ArticlesController::class)->prefix('articles')->group(function
 Route::controller(StoresController::class)->prefix('stores')->group(function () {
     Route::get('/', 'list');
     Route::get('/{id}', 'show');
+    Route::get('/{id}/value', 'storeInventoriesValue');
     // Route::post('/store', 'store');
     // Route::put('/edit/{id}', 'edit');
     // Route::delete('/delete/{id}', 'delete');

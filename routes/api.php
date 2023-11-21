@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(ArticlesController::class)->prefix('articles')->group(function () {
     Route::get('/', 'list');
     Route::get('/{id}', 'show');
+    Route::get('/deleted-articles', 'showDeleted');
     Route::post('/store', 'store');
     Route::put('/edit/{id}', 'edit');
     Route::delete('/delete/{id}', 'delete');

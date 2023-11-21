@@ -13,8 +13,8 @@ class ArticleFactory extends Factory
             'catalog_number' => fake()->unique()->numerify(),
             'draft_number' => fake()->unique()->numerify(),
             'material' => fake()->colorName(),
-            'description' => fake()->title(),
-            'price' => fake()->randomFloat()
+            'description' => fake()->colorName(),
+            'price' => fake()->numerify()
         ];
     }
 }

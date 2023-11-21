@@ -14,4 +14,22 @@ class StoresController extends Controller
 
         return response()->json(['success' => true, 'result' => $articles]);
     }
+
+    public function show($id): ?JsonResponse
+    {
+        $store = Store::findOrFail($id);
+
+        return  response()->json(['success' => true, 'result' => $store]);
+    }
+
+    public function storeInventories($id): ?JsonResponse
+    {
+        $success = false;
+        $inventories = Store::find($id)->articles;
+        count($inventories) == 0
+        ? $success = false
+        : $success = true;
+
+        return response()->json(['success' => $success, 'result' => $inventories]);
+    }
 }

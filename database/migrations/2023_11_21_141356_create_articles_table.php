@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->string('inventory_number');
-            $table->string('catalog_number');
-            $table->string('draft_number');
-            $table->string('material');
+            $table->string('catalog_number')->nullable();
+            $table->string('draft_number')->nullable();
+            $table->string('material')->nullable();
             $table->string('description');
             $table->decimal('price');
             $table->timestamps();

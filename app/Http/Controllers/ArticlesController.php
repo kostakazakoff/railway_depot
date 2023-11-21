@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 Validations (StoreRequest)
 Filtering
 */
+
 class ArticlesController extends Controller
 {
     public function list(): JsonResponse
@@ -20,7 +21,7 @@ class ArticlesController extends Controller
         return response()->json(['success' => true, 'result' => $articles]);
     }
 
-    public function store(Request $request): ?JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $article = Article::create($request->all());
 
@@ -54,12 +55,12 @@ class ArticlesController extends Controller
 
     public function articleInventories($id): ?JsonResponse
     {
-        try {
-            $inventories = Article::find($id)->stores;
-        } catch (\Exception $e) {
-            $inventories = [];
-        }
+        $success = false;
+        $inventories = Article::find($id)->stores;
+        count($inventories) == 0
+        ? $success = false
+        : $success = true;
 
-        return response()->json($inventories);
+        return response()->json(['success' => $success, 'result' => $inventories]);
     }
 }

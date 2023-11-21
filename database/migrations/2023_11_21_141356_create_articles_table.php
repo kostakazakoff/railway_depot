@@ -10,16 +10,17 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('inventory_number');
             $table->string('catalog_number');
             $table->string('draft_number');
-            $table->string('material_number');
+            $table->string('material');
             $table->string('description');
             $table->decimal('price');
             $table->timestamps();
         });
     }
-    
+
     public function down(): void
     {
         Schema::dropIfExists('articles');

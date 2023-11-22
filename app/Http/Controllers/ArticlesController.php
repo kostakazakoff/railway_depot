@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreArticleRequest;
 use App\Models\Image;
-use Illuminate\Support\Facades\File;
 
 /* TODO:
 Filtering
@@ -24,17 +22,10 @@ class ArticlesController extends Controller
     }
 
 
-    public function store(StoreArticleRequest $request): JsonResponse
+    private function handleImages($imageRequest, $articleId): void
     {
-        $article = Article::create($request->except('image'));
-
-        $imageRequest = $request->file('images');
-
-        if (!$imageRequest) {
-            return response()->json($article);
-        }
-
         foreach ($imageRequest as $image) {
+            
             $imageName = time() . '_' . $image->getClientOriginalName();
 
             $imageLocation = public_path('images');
@@ -44,8 +35,20 @@ class ArticlesController extends Controller
             Image::create([
                 'filename' => $imageName,
                 'path' => $imageLocation . '/' . $imageName,
-                'article_id' => $article->id
+                'article_id' => $articleId
             ]);
+        }
+    }
+
+
+    public function store(StoreArticleRequest $request): JsonResponse
+    {
+        $article = Article::create($request->except('image'));
+
+        $imageRequest = $request->file('images');
+
+        if ($imageRequest) {
+            $this->handleImages($imageRequest, $article->id);
         }
 
         return response()->json($article);
@@ -63,11 +66,8 @@ class ArticlesController extends Controller
     public function showDeleted(): JsonResponse
     {
         $deleted = Article::onlyTrashed()->get();
-        count($deleted) == 0
-            ? $success = false
-            : $success = true;
 
-        return response()->json(['success' => $success, 'result' => $deleted]);
+        return response()->json($deleted);
     }
 
 

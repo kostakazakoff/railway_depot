@@ -43,29 +43,16 @@ class StoresController extends Controller
 
         $inventories = collect(Store::find($id)->articles);
 
-        count($inventories) == 0
-            ? $success = false
-            : $success = true;
+        foreach ($inventories as $article) {
+            $quantity = DB::select(
+                'select quantity from inventories where article_id = ? and store_id = ?',
+                [$article->id, $id]);
 
-        if (!$success) {
-            return response()->json(['success' => $success]);
-        }
-
-        try {
-            foreach ($inventories as $article) {
-                $quantity = DB::select(
-                    'select quantity from inventories where article_id = ?',
-                    [$article->id]
-                )[0]->quantity;
-    
-                $value += intval($article->price) * $quantity;
+            if ($quantity) {
+                $value += $quantity[0]->quantity * intval($article->price);
             }
-
-        } catch (\Exception $e) {
-            $success = false;
         }
-        
 
-        return response()->json(['success' => $success, 'result' => $value]);
+        return response()->json($value);
     }
 }

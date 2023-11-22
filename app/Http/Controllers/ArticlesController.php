@@ -85,14 +85,14 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
-        $files = $article->images;
+        // $files = $article->images;
 
-        if ($files) {
-            foreach ($files as $file) {
-                Image::whereFilename($file->filename)->delete();
-                File::delete($file->path);
-            }
-        }
+        // if ($files) {
+        //     foreach ($files as $file) {
+        //         Image::whereFilename($file->filename)->delete();
+        //         File::delete($file->path);
+        //     }
+        // }
 
         $article->delete();
 

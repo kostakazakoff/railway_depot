@@ -22,6 +22,7 @@ class ArticlesController extends Controller
     }
 
 
+    /* TODO: Validate files */
     private function handleImages($imageRequest, $articleId): void
     {
         foreach ($imageRequest as $image) {
@@ -71,17 +72,25 @@ class ArticlesController extends Controller
     }
 
 
-    public function edit(StoreArticleRequest $request, string $id): ?JsonResponse
+    /* TODO: */
+    public function edit(StoreArticleRequest $request, $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
+        dd($article);
 
-        $article->update($request->all());
+        $article->update($request->except('images'));
+
+        $imageRequest = $request->file('images');
+
+        if ($imageRequest) {
+            $this->handleImages($imageRequest, $article->id);
+        }
 
         return response()->json($article);
     }
 
 
-    public function delete(string $id): ?JsonResponse
+    public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
 

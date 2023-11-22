@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Image extends Model
 {
@@ -13,7 +14,7 @@ class Image extends Model
 
     protected $fillable = ['filename', 'path', 'article_id'];
 
-    public function articles()
+    public function articles(): BelongsTo
     {
         return $this->belongsTo(Article::class);
     }

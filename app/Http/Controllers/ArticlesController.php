@@ -81,13 +81,13 @@ class ArticlesController extends Controller
 
         $files = $article->images;
 
+        $article->delete();
+
         if ($files) {
             foreach ($files as $file) {
                 File::delete($file->path);
             }
         }
-
-        $article->delete();
 
         return response()->json('Article deleted successfully');
     }

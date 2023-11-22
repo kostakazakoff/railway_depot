@@ -13,43 +13,40 @@ class StoresController extends Controller
     {
         $articles = collect(Store::all());
 
-        return response()->json(['success' => true, 'result' => $articles]);
+        return response()->json($articles);
     }
 
 
     public function show($id): ?JsonResponse
     {
-        $store = Store::findOrFail($id);
+        $store = Store::find($id);
 
-        return  response()->json(['success' => true, 'result' => $store]);
+        return  response()->json($store);
     }
 
 
-    public function storeInventories($id): JsonResponse
+    public function depotInventories($id): JsonResponse
     {
-        $inventories = Store::find($id)->articles;
+        $inventories = Store::find($id)?->articles;
 
-        count($inventories) == 0
-            ? $success = false
-            : $success = true;
-
-        return response()->json(['success' => $success, 'result' => $inventories]);
+        return response()->json($inventories);
     }
 
 
-    public function storeInventoriesValue($id): JsonResponse
+    public function depotInventoriesValue($id): JsonResponse
     {
         $value = 0;
 
-        $inventories = collect(Store::find($id)->articles);
+        $inventories = collect(Store::find($id)?->articles);
 
         foreach ($inventories as $article) {
             $quantity = DB::select(
                 'select quantity from inventories where article_id = ? and store_id = ?',
-                [$article->id, $id]);
+                [$article->id, $id]
+            );
 
             if ($quantity) {
-                $value += $quantity[0]->quantity * intval($article->price);
+                $value += $quantity[0]->quantity * floatval($article->price);
             }
         }
 

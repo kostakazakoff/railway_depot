@@ -13,13 +13,11 @@ return new class extends Migration
             $table->id();
             $table->string('filename');
             $table->string('path');
-            $table->foreignId('article_id')
-                ->constrained('articles')
-                ->onDelete('cascade');
+            $table->bigInteger('article_id');
             $table->timestamps();
         });
     }
-    
+
     public function down(): void
     {
         Schema::dropIfExists('images');

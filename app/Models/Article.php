@@ -14,11 +14,13 @@ class Article extends Model
 {
     use HasFactory, SoftDeletes, HasSlug;
 
+    
     protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at'
     ];
+
 
     protected $fillable = [
         'inventory_number',
@@ -29,6 +31,7 @@ class Article extends Model
         'price',
     ];
 
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -36,13 +39,15 @@ class Article extends Model
             ->saveSlugsTo('slug');
     }
 
+
     public function stores()
     {
         return $this->belongsToMany(Store::class, 'inventories');
     }
 
+
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class, 'article_id', 'id');
     }
 }

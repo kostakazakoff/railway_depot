@@ -15,12 +15,14 @@ Filtering
 
 class ArticlesController extends Controller
 {
+
     public function list(): JsonResponse
     {
         $articles = collect(Article::all());
 
         return response()->json(['success' => true, 'result' => $articles]);
     }
+
 
     public function store(StoreArticleRequest $request): JsonResponse
     {
@@ -49,12 +51,14 @@ class ArticlesController extends Controller
         return response()->json($article);
     }
 
+
     public function show(string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
 
         return response()->json($article);
     }
+
 
     public function showDeleted(): JsonResponse
     {
@@ -66,6 +70,7 @@ class ArticlesController extends Controller
         return response()->json(['success' => $success, 'result' => $deleted]);
     }
 
+
     public function edit(StoreArticleRequest $request, string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
@@ -75,22 +80,25 @@ class ArticlesController extends Controller
         return response()->json($article);
     }
 
+
     public function delete(string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
 
         $files = $article->images;
 
-        $article->delete();
-
         if ($files) {
             foreach ($files as $file) {
+                Image::whereFilename($file->filename)->delete();
                 File::delete($file->path);
             }
         }
 
+        $article->delete();
+
         return response()->json('Article deleted successfully');
     }
+
 
     public function articleInventories($id): JsonResponse
     {

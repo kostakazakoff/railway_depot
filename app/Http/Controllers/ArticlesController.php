@@ -6,7 +6,8 @@ use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreArticleRequest;
-
+use App\Models\Image;
+use Illuminate\Support\Facades\File;
 
 /* TODO:
 Filtering
@@ -23,16 +24,36 @@ class ArticlesController extends Controller
 
     public function store(StoreArticleRequest $request): JsonResponse
     {
-        $article = Article::create($request->all());
+        $article = Article::create($request->except('image'));
 
-        return response()->json(['success' => true, 'result' => $article]);
+        $imageRequest = $request->file('images');
+
+        if (!$imageRequest) {
+            return response()->json($article);
+        }
+
+        foreach ($imageRequest as $image) {
+            $imageName = time() . '_' . $image->getClientOriginalName();
+
+            $imageLocation = public_path('images');
+
+            $image->move($imageLocation, $imageName);
+
+            Image::create([
+                'filename' => $imageName,
+                'path' => $imageLocation . '/' . $imageName,
+                'article_id' => $article->id
+            ]);
+        }
+
+        return response()->json($article);
     }
 
     public function show(string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
 
-        return response()->json(['success' => true, 'result' => $article]);
+        return response()->json($article);
     }
 
     public function showDeleted(): JsonResponse
@@ -51,26 +72,30 @@ class ArticlesController extends Controller
 
         $article->update($request->all());
 
-        return response()->json(['success' => true, 'result' => $article]);
+        return response()->json($article);
     }
 
     public function delete(string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
 
+        $files = $article->images;
+
+        if ($files) {
+            foreach ($files as $file) {
+                File::delete($file->path);
+            }
+        }
+
         $article->delete();
 
-        return response()->json(['success' => true]);
+        return response()->json('Article deleted successfully');
     }
 
     public function articleInventories($id): JsonResponse
     {
-        $success = false;
-        $inventories = Article::find($id)->stores;
-        count($inventories) == 0
-            ? $success = false
-            : $success = true;
+        $inventories = collect(Article::find($id)?->stores);
 
-        return response()->json(['success' => $success, 'result' => $inventories]);
+        return response()->json($inventories);
     }
 }

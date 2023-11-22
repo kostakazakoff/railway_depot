@@ -23,6 +23,7 @@ class StoreArticleRequest extends FormRequest
             'inventory_number' => 'required',
             'description' => 'required',
             'price' => 'required',
+            'image' => 'max: 5048',
         ];
     }
 

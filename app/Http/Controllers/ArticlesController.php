@@ -9,7 +9,6 @@ use App\Http\Requests\StoreArticleRequest;
 
 
 /* TODO:
-Validations (StoreRequest)
 Filtering
 */
 

@@ -6,6 +6,7 @@ use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
+
 class StoresController extends Controller
 {
     public function list(): JsonResponse
@@ -43,7 +44,7 @@ class StoresController extends Controller
                 'select quantity from inventories where article_id = ? and store_id = ?',
                 [$article->id, $id]
             );
-
+            
             if ($quantity) {
                 $value += $quantity[0]->quantity * floatval($article->price);
             }

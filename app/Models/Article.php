@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Sluggable\HasSlug;
 
 
-/* Images table OneToMany */
 class Article extends Model
 {
     use HasFactory, SoftDeletes, HasSlug;
@@ -39,5 +38,10 @@ class Article extends Model
     public function stores()
     {
         return $this->belongsToMany(Store::class, 'inventories');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 }

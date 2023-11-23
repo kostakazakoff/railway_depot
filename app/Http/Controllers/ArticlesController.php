@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\StoreImagesRequest;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 
-/* TODO:
-Filtering
-*/
+/* TODO: Filtering */
 
 class ArticlesController extends Controller
 {
@@ -23,11 +22,10 @@ class ArticlesController extends Controller
     }
 
 
-    /* TODO: Validate images */
     private function uploadImages($imageRequest, $articleId): void
     {
         foreach ($imageRequest as $image) {
-            
+
             $imageName = time() . '_' . $image->getClientOriginalName();
 
             $imageLocation = storage_path('app/images');
@@ -43,11 +41,11 @@ class ArticlesController extends Controller
     }
 
 
-    public function store(StoreArticleRequest $request): JsonResponse
+    public function store(StoreArticleRequest $request, StoreImagesRequest $imgRequest): JsonResponse
     {
         $article = Article::create($request->except('image'));
 
-        $imageRequest = $request->file('images');
+        $imageRequest = $imgRequest->file('images');
 
         if ($imageRequest) {
             $this->uploadImages($imageRequest, $article->id);
@@ -72,14 +70,14 @@ class ArticlesController extends Controller
         return response()->json($deleted);
     }
 
-    
-    public function update(StoreArticleRequest $request, string $id): ?JsonResponse
+
+    public function update(StoreArticleRequest $request, StoreImagesRequest $imgRequest, string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
-        
+
         $article->update($request->except('images'));
 
-        $imageRequest = $request->file('images');
+        $imageRequest = $imgRequest->file('images');
 
         if ($imageRequest) {
             $this->uploadImages($imageRequest, $article->id);

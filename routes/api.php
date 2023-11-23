@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\StoresController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -29,3 +30,6 @@ Route::controller(StoresController::class)->prefix('stores')->group(function () 
     // Route::delete('/delete/{id}', 'delete');
     Route::get('/{id}/inventories', 'depotInventories');
 });
+
+
+Route::delete('images/delete', [ImagesController::class, 'delete']);

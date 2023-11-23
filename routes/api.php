@@ -13,7 +13,7 @@ Route::controller(ArticlesController::class)->prefix('articles')->group(function
     Route::get('/', 'list');
     Route::post('/store', 'store');
     Route::get('/{id}', 'show');
-    Route::put('/edit/{id}', 'update');
+    Route::post('/edit/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
     Route::get('/deleted-articles', 'showDeleted');
     Route::get('/{id}/inventories', 'articleInventories');

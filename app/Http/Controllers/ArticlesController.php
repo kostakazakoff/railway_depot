@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Image;
+use Illuminate\Http\Request;
 
 /* TODO:
 Filtering
@@ -72,12 +74,10 @@ class ArticlesController extends Controller
     }
 
 
-    /* TODO: */
-    public function edit(StoreArticleRequest $request, $id): ?JsonResponse
+    public function update(Request $request, string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
-        dd($article);
-
+        
         $article->update($request->except('images'));
 
         $imageRequest = $request->file('images');

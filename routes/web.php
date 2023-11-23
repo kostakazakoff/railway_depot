@@ -1,5 +1,6 @@
 <?php
 
+use DebugBar\DebugBar;
 use Illuminate\Support\Facades\Route;
 
 /*

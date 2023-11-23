@@ -6,11 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreArticleRequest extends FormRequest
+
+class UpdateArticleRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    
     public function authorize(): bool
     {
         return true;
@@ -27,6 +26,7 @@ class StoreArticleRequest extends FormRequest
     }
 
 
+
     public function failedValidation(Validator $validator)
     {
         $result = array([
@@ -37,7 +37,7 @@ class StoreArticleRequest extends FormRequest
         throw new HttpResponseException(response()->json($result));
     }
 
-
+    
     public function messages()
     {
         return [

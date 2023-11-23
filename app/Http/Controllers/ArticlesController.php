@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
 use App\Models\Image;
+use Illuminate\Support\Facades\Storage;
 
 /* TODO:
 Filtering
@@ -22,30 +23,22 @@ class ArticlesController extends Controller
     }
 
 
-    /* TODO: Validate files */
-    private function uploadImages($imageRequest, $article): void
+    /* TODO: Validate images */
+    private function uploadImages($imageRequest, $articleId): void
     {
         foreach ($imageRequest as $image) {
             
             $imageName = time() . '_' . $image->getClientOriginalName();
 
-            $imageLocation = public_path('images');
+            $imageLocation = storage_path('app/images');
 
             $image->move($imageLocation, $imageName);
 
             Image::create([
                 'filename' => $imageName,
                 'path' => $imageLocation . '/' . $imageName,
-                'article_id' => $article->id
+                'article_id' => $articleId
             ]);
-        }
-    }
-
-    /* TODO: */
-    private function updateImages($imageRequest, $article): void
-    {
-        foreach ($imageRequest as $image) {
-            dd($article->images);
         }
     }
 
@@ -57,7 +50,7 @@ class ArticlesController extends Controller
         $imageRequest = $request->file('images');
 
         if ($imageRequest) {
-            $this->uploadImages($imageRequest, $article);
+            $this->uploadImages($imageRequest, $article->id);
         }
 
         return response()->json($article);
@@ -80,7 +73,6 @@ class ArticlesController extends Controller
     }
 
     
-    /* TODO: */
     public function update(StoreArticleRequest $request, string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
@@ -90,7 +82,7 @@ class ArticlesController extends Controller
         $imageRequest = $request->file('images');
 
         if ($imageRequest) {
-            $this->updateImages($imageRequest, $article);
+            $this->uploadImages($imageRequest, $article->id);
         }
 
         return response()->json($article);

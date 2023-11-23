@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
-use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Image;
-use Illuminate\Http\Request;
 
 /* TODO:
 Filtering
@@ -25,7 +23,7 @@ class ArticlesController extends Controller
 
 
     /* TODO: Validate files */
-    private function handleImages($imageRequest, $articleId): void
+    private function uploadImages($imageRequest, $article): void
     {
         foreach ($imageRequest as $image) {
             
@@ -38,8 +36,16 @@ class ArticlesController extends Controller
             Image::create([
                 'filename' => $imageName,
                 'path' => $imageLocation . '/' . $imageName,
-                'article_id' => $articleId
+                'article_id' => $article->id
             ]);
+        }
+    }
+
+    /* TODO: */
+    private function updateImages($imageRequest, $article): void
+    {
+        foreach ($imageRequest as $image) {
+            dd($article->images);
         }
     }
 
@@ -51,7 +57,7 @@ class ArticlesController extends Controller
         $imageRequest = $request->file('images');
 
         if ($imageRequest) {
-            $this->handleImages($imageRequest, $article->id);
+            $this->uploadImages($imageRequest, $article);
         }
 
         return response()->json($article);
@@ -73,8 +79,9 @@ class ArticlesController extends Controller
         return response()->json($deleted);
     }
 
-
-    public function update(Request $request, string $id): ?JsonResponse
+    
+    /* TODO: */
+    public function update(StoreArticleRequest $request, string $id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
         
@@ -83,7 +90,7 @@ class ArticlesController extends Controller
         $imageRequest = $request->file('images');
 
         if ($imageRequest) {
-            $this->handleImages($imageRequest, $article->id);
+            $this->updateImages($imageRequest, $article);
         }
 
         return response()->json($article);

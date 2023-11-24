@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreImagesRequest;
 use App\Models\Image;
-use Illuminate\Support\Facades\Storage;
 
 /* TODO: Filtering */
 

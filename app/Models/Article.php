@@ -2,19 +2,23 @@
 
 namespace App\Models;
 
+use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Sluggable\HasSlug;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\File;
+
 
 
 class Article extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug;
+    use HasFactory, SoftDeletes, HasSlug, Prunable;
 
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -49,5 +53,24 @@ class Article extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class, 'article_id', 'id');
+    }
+
+
+    public function prunable(): Builder
+    {
+        return static::where('deleted_at', '!=', null);
+    }
+
+
+    protected function pruning(): void
+    {
+        $files = $this->images;
+
+        if ($files) {
+            foreach ($files as $file) {
+                Image::whereFilename($file->filename)->delete();
+                File::delete($file->path);
+            }
+        }
     }
 }

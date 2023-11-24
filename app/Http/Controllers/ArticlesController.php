@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreImagesRequest;
 use App\Models\Image;
+use Illuminate\Support\Facades\Artisan;
 
 /* TODO: Filtering */
 
@@ -62,9 +63,9 @@ class ArticlesController extends Controller
     }
 
 
-    public function showDeleted(): JsonResponse
+    public function showTrashed(): JsonResponse
     {
-        $deleted = Article::onlyTrashed()->get();
+        $deleted = Article::onlyTrashed()?->get();
 
         return response()->json($deleted);
     }
@@ -101,5 +102,13 @@ class ArticlesController extends Controller
         $inventories = collect(Article::find($id)?->stores);
 
         return response()->json($inventories);
+    }
+
+
+    public function pruneModel(): JsonResponse
+    {
+        Artisan::call('model:prune');
+
+        return response()->json('Confirmed');
     }
 }

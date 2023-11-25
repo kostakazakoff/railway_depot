@@ -17,8 +17,9 @@ class ArticlesController extends Controller
     public function list(): JsonResponse
     {
         $articles = collect(Article::all());
+        $deleted = Article::onlyTrashed()->get();
 
-        return response()->json(['success' => true, 'result' => $articles]);
+        return response()->json(['success' => true, 'result' => $articles, 'deleted' => $deleted]);
     }
 
 
@@ -63,9 +64,9 @@ class ArticlesController extends Controller
     }
 
 
-    public function showTrashed(): JsonResponse
+    public function getTrashed(): JsonResponse
     {
-        $deleted = Article::onlyTrashed()?->get();
+        $deleted = Article::onlyTrashed()->get();
 
         return response()->json($deleted);
     }

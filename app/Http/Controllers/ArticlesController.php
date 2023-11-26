@@ -6,7 +6,9 @@ use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreImagesRequest;
+use App\Http\Requests\StoreInventoryRequest;
 use App\Models\Image;
+use App\Models\Inventory;
 use Illuminate\Support\Facades\Artisan;
 
 /* TODO: Filtering */
@@ -42,11 +44,28 @@ class ArticlesController extends Controller
     }
 
 
-    public function store(StoreArticleRequest $request, StoreImagesRequest $imgRequest): JsonResponse
-    {
-        $article = Article::create($request->except('image'));
+    public function store(
+        StoreArticleRequest $request,
+        StoreImagesRequest $imgRequest,
+        StoreInventoryRequest $inventoryRequest
+    ): JsonResponse {
 
-        
+        $article = Article::create([
+            'inventory_number' => $request->inventory_number,
+            'catalog_number' => $request->catalog_number,
+            'draft_number' => $request->draft_number,
+            'material' => $request->material,
+            'description' => $request->description,
+            'price' => $request->price
+        ]);
+
+        Inventory::create([
+            'article_id' => $article->id,
+            'store_id' => $inventoryRequest->store_id,
+            'quantity' => $inventoryRequest->quantity,
+            'package' => $inventoryRequest->package,
+            'position' => $inventoryRequest->position
+        ]);
 
         $imageRequest = $imgRequest->file('images');
 

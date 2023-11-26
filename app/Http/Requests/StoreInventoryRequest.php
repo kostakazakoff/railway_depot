@@ -6,10 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreArticleRequest extends FormRequest
+
+class StoreInventoryRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     TODO: Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
@@ -20,9 +21,9 @@ class StoreArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'inventory_number' => 'required',
-            'description' => 'required',
-            'price' => 'required|integer|min:0',
+            'store_id' => 'required',
+            'quantity' => 'required|integer|min:1',
+            'position' => 'required'
         ];
     }
 
@@ -41,11 +42,11 @@ class StoreArticleRequest extends FormRequest
     public function messages()
     {
         return [
-            'inventory_number.required' => 'inventory number field is required',
-            'description.required' => 'Description field is required',
-            'price.required' => 'Price field is required',
-            'price.integer' => 'Price has to be an integer',
-            'price.min' => 'Price has to be a positive number',
+            'store_id.required' => 'Store location field is required',
+            'quantity.required' => 'Quantity field is required',
+            'quantity.integer' => 'Quantity field has to be an integer',
+            'quantity.min' => 'Quantity has to be a positive number',
+            'position.required' => 'Position field is required'
         ];
     }
 }

@@ -44,12 +44,8 @@ class ArticlesController extends Controller
     }
 
 
-    public function store(
-        StoreArticleRequest $request,
-        StoreImagesRequest $imgRequest,
-        StoreInventoryRequest $inventoryRequest
-    ): JsonResponse {
-
+    private function handleOrder($request, $imgRequest, $inventoryRequest)
+    {
         $article = Article::create([
             'inventory_number' => $request->inventory_number,
             'catalog_number' => $request->catalog_number,
@@ -59,7 +55,7 @@ class ArticlesController extends Controller
             'price' => $request->price
         ]);
 
-        Inventory::create([
+        $inventory = Inventory::create([
             'article_id' => $article->id,
             'store_id' => $inventoryRequest->store_id,
             'quantity' => $inventoryRequest->quantity,
@@ -73,7 +69,19 @@ class ArticlesController extends Controller
             $this->uploadImages($imageRequest, $article->id);
         }
 
-        return response()->json($article);
+        return ['article' => $article, 'inventory' => $inventory];
+    }
+
+
+    public function store(
+        StoreArticleRequest $request,
+        StoreImagesRequest $imgRequest,
+        StoreInventoryRequest $inventoryRequest
+    ): JsonResponse {
+
+        $response = $this->handleOrder($request, $imgRequest, $inventoryRequest);
+
+        return response()->json($response);
     }
 
 

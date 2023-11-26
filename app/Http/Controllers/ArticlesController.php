@@ -19,7 +19,7 @@ class ArticlesController extends Controller
         $articles = collect(Article::all());
         $deleted = Article::onlyTrashed()->get();
 
-        return response()->json(['success' => true, 'result' => $articles, 'deleted' => $deleted]);
+        return response()->json(['success' => true, 'result' => $articles, 'trashed' => $deleted]);
     }
 
 

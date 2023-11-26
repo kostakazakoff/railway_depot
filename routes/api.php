@@ -23,7 +23,7 @@ Route::controller(ArticlesController::class)->prefix('articles')->group(function
     Route::get('/{id}', 'show');
     Route::post('/edit/{id}', 'update');
     Route::delete('/delete/{id}', 'delete');
-    Route::get('/trash', 'getTrashed');
+    Route::get('/trashed', 'getTrashed');
     Route::post('/empty-trash', 'pruneModel');
     Route::get('/{id}/inventories', 'articleInventories');
 });

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\Inventory;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -37,17 +39,11 @@ class StoresController extends Controller
     {
         $value = 0;
 
-        $inventories = collect(Store::find($id)?->articles);
-
-        foreach ($inventories as $article) {
-            $quantity = DB::select(
-                'select quantity from inventories where article_id = ? and store_id = ?',
-                [$article->id, $id]
-            );
-            
-            if ($quantity) {
-                $value += $quantity[0]->quantity * floatval($article->price);
-            }
+        $inventories = collect(Inventory::whereStoreId($id)->pluck('article_id', 'quantity'));
+        
+        foreach ($inventories as $quantity => $article_id) {
+            $price = Article::find($article_id)->price;
+            $value += $quantity * floatval($price);
         }
 
         return response()->json($value);

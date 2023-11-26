@@ -46,6 +46,8 @@ class ArticlesController extends Controller
     {
         $article = Article::create($request->except('image'));
 
+        
+
         $imageRequest = $imgRequest->file('images');
 
         if ($imageRequest) {

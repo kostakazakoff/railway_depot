@@ -64,6 +64,7 @@ class ArticlesController extends Controller
     }
 
 
+    /* TODO: */
     public function getTrashed(): JsonResponse
     {
         $deleted = Article::onlyTrashed()->get();

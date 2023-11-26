@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Artisan;
 class ArticlesController extends Controller
 {
 
+    
+
+
     public function list(): JsonResponse
     {
         $articles = collect(Article::all());
@@ -44,17 +47,8 @@ class ArticlesController extends Controller
     }
 
 
-    private function handleOrder($request, $imgRequest, $inventoryRequest)
+    private function handleOrder($article, $imgRequest, $inventoryRequest)
     {
-        $article = Article::create([
-            'inventory_number' => $request->inventory_number,
-            'catalog_number' => $request->catalog_number,
-            'draft_number' => $request->draft_number,
-            'material' => $request->material,
-            'description' => $request->description,
-            'price' => $request->price
-        ]);
-
         $inventory = Inventory::create([
             'article_id' => $article->id,
             'store_id' => $inventoryRequest->store_id,
@@ -69,7 +63,22 @@ class ArticlesController extends Controller
             $this->uploadImages($imageRequest, $article->id);
         }
 
-        return ['article' => $article, 'inventory' => $inventory];
+        return ['success' => true, 'article' => $article, 'inventory' => $inventory];
+    }
+
+
+    private function createArticle($request)
+    {
+        $article = Article::create([
+            'inventory_number' => $request->inventory_number,
+            'catalog_number' => $request->catalog_number,
+            'draft_number' => $request->draft_number,
+            'material' => $request->material,
+            'description' => $request->description,
+            'price' => $request->price
+        ]);
+
+        return $article;
     }
 
 
@@ -79,7 +88,32 @@ class ArticlesController extends Controller
         StoreInventoryRequest $inventoryRequest
     ): JsonResponse {
 
-        $response = $this->handleOrder($request, $imgRequest, $inventoryRequest);
+        $article = $this->createArticle($request);
+
+        $response = $this->handleOrder($article, $imgRequest, $inventoryRequest);
+
+        return response()->json($response);
+    }
+
+
+    public function update(
+        StoreArticleRequest $request,
+        StoreImagesRequest $imgRequest,
+        StoreInventoryRequest $inventoryRequest,
+        string $id
+    ): ?JsonResponse {
+        $article = Article::findOrFail($id);
+
+        $article->update([
+            'inventory_number' => $request->inventory_number,
+            'catalog_number' => $request->catalog_number,
+            'draft_number' => $request->draft_number,
+            'material' => $request->material,
+            'description' => $request->description,
+            'price' => $request->price
+        ]);
+
+        $response = $this->handleOrder($article, $imgRequest, $inventoryRequest);
 
         return response()->json($response);
     }
@@ -89,7 +123,9 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
-        return response()->json($article);
+        $articleImages = $article->images;
+
+        return response()->json(['success' => true, 'article' => $article]);
     }
 
 
@@ -99,22 +135,6 @@ class ArticlesController extends Controller
         $deleted = Article::onlyTrashed()->get();
 
         return response()->json($deleted);
-    }
-
-
-    public function update(StoreArticleRequest $request, StoreImagesRequest $imgRequest, string $id): ?JsonResponse
-    {
-        $article = Article::findOrFail($id);
-
-        $article->update($request->except('images'));
-
-        $imageRequest = $imgRequest->file('images');
-
-        if ($imageRequest) {
-            $this->uploadImages($imageRequest, $article->id);
-        }
-
-        return response()->json($article);
     }
 
 

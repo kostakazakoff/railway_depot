@@ -35,20 +35,17 @@ class StoresController extends Controller
     }
 
 
-    public function depotInventoriesValue($id): JsonResponse
+    public function depotTotal($id): JsonResponse
     {
-        $total = collect(Inventory::whereStoreId($id)
-        ->pluck('article_id', 'quantity'))
-        ->reduce(function ($sum, $article_id, $quantity) {
-            $price = Article::find($article_id)->price;
-            return $sum + $price * $quantity;
-        }, 0);
-        
-        // $total = 0;
-        // foreach ($inventories as $quantity => $article_id) {
-        //     $price = Article::find($article_id)->price;
-        //     $total += $quantity * floatval($price);
-        // }
+        $inventory = collect(Inventory::whereStoreId($id)->get());
+        $total = $inventory
+
+            ->pluck('article_id', 'quantity')
+
+            ->reduce(function ($sum, $article_id, $quantity) {
+                $price = Article::find($article_id)?->price;
+                return $sum + $price * $quantity;
+            }, 0);
 
         return response()->json($total);
     }

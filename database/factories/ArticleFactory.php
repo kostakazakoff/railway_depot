@@ -10,8 +10,8 @@ class ArticleFactory extends Factory
     {
         return [
             'inventory_number' => fake()->unique()->numerify(),
-            'catalog_number' => fake()->unique()->numerify(),
-            'draft_number' => fake()->unique()->numerify(),
+            'catalog_number' => fake()->numerify(),
+            'draft_number' => fake()->numerify(),
             'material' => fake()->colorName(),
             'description' => fake()->colorName(),
             'price' => fake()->numerify()

@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class ArticlesController extends Controller
 {
-
-    
-
-
     public function list(): JsonResponse
     {
         $articles = collect(Article::all());
@@ -47,28 +43,23 @@ class ArticlesController extends Controller
     }
 
 
-    private function handleOrder($article, $imgRequest, $inventoryRequest)
+    private function handleImages($article, $imgRequest, $inventoryRequest): void
     {
-        $inventory = Inventory::create([
-            'article_id' => $article->id,
-            'store_id' => $inventoryRequest->store_id,
-            'quantity' => $inventoryRequest->quantity,
-            'package' => $inventoryRequest->package,
-            'position' => $inventoryRequest->position
-        ]);
-
         $imageRequest = $imgRequest->file('images');
 
         if ($imageRequest) {
             $this->uploadImages($imageRequest, $article->id);
-        }
-
-        return ['success' => true, 'article' => $article, 'inventory' => $inventory];
+        };
     }
 
 
-    private function createArticle($request)
+    public function store(
+        StoreArticleRequest $request,
+        StoreImagesRequest $imgRequest,
+        StoreInventoryRequest $inventoryRequest
+    ): JsonResponse
     {
+
         $article = Article::create([
             'inventory_number' => $request->inventory_number,
             'catalog_number' => $request->catalog_number,
@@ -78,21 +69,17 @@ class ArticlesController extends Controller
             'price' => $request->price
         ]);
 
-        return $article;
-    }
+        $inventory = Inventory::create([
+            'article_id' => $article->id,
+            'store_id' => $inventoryRequest->store_id,
+            'quantity' => $inventoryRequest->quantity,
+            'package' => $inventoryRequest->package,
+            'position' => $inventoryRequest->position
+        ]);
 
+        $this->handleImages($article, $imgRequest, $inventoryRequest);
 
-    public function store(
-        StoreArticleRequest $request,
-        StoreImagesRequest $imgRequest,
-        StoreInventoryRequest $inventoryRequest
-    ): JsonResponse {
-
-        $article = $this->createArticle($request);
-
-        $response = $this->handleOrder($article, $imgRequest, $inventoryRequest);
-
-        return response()->json($response);
+        return response()->json(['success' => true, 'article' => $article, 'inventory' => $inventory]);
     }
 
 
@@ -113,9 +100,18 @@ class ArticlesController extends Controller
             'price' => $request->price
         ]);
 
-        $response = $this->handleOrder($article, $imgRequest, $inventoryRequest);
+        $inventory = Inventory::whereArticleId($id);
 
-        return response()->json($response);
+        $inventory->update([
+            'store_id' => $inventoryRequest->store_id,
+            'quantity' => $inventoryRequest->quantity,
+            'package' => $inventoryRequest->package,
+            'position' => $inventoryRequest->position
+        ]);
+
+        $this->handleImages($article, $imgRequest, $inventoryRequest);
+
+        return response()->json(['success' => true, 'article' => $article, 'inventory' => $inventory]);
     }
 
 

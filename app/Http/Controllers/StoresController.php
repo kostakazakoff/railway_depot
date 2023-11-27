@@ -6,7 +6,6 @@ use App\Models\Article;
 use App\Models\Inventory;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 
 
 class StoresController extends Controller

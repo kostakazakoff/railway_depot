@@ -20,7 +20,7 @@ class ArticlesController extends Controller
         $articles = collect(Article::all());
         $deleted = Article::onlyTrashed()->get();
 
-        return response()->json(['success' => true, 'result' => $articles, 'trashed' => $deleted]);
+        return response()->json(['success' => true, 'articles' => $articles, 'trashed' => $deleted]);
     }
 
 
@@ -125,15 +125,6 @@ class ArticlesController extends Controller
     }
 
 
-    /* TODO: */
-    public function getTrashed(): JsonResponse
-    {
-        $deleted = Article::onlyTrashed()->get();
-
-        return response()->json($deleted);
-    }
-
-
     public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
@@ -141,14 +132,6 @@ class ArticlesController extends Controller
         $article->delete();
 
         return response()->json('Article deleted successfully');
-    }
-
-
-    public function articleInventories($id): JsonResponse
-    {
-        $inventories = collect(Article::find($id)?->stores);
-
-        return response()->json($inventories);
     }
 
 

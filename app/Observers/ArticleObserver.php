@@ -23,14 +23,14 @@ class ArticleObserver
     
     public function deleted(Article $article): void
     {
-        // $files = $article->images;
+        $files = $article->images;
 
-        // if ($files) {
-        //     foreach ($files as $file) {
-        //         Image::whereFilename($file->filename)->delete();
-        //         File::delete($file->path);
-        //     }
-        // }
+        if ($files) {
+            foreach ($files as $file) {
+                Image::whereFilename($file->filename)->delete();
+                File::delete($file->path);
+            }
+        }
     }
 
     

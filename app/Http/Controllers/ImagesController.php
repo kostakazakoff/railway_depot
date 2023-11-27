@@ -15,7 +15,7 @@ class ImagesController extends Controller
     {
         $imageIds = $request->all();
 
-        $deletedImages = false;
+        $success = false;
 
         foreach ($imageIds as $id) {
 
@@ -25,14 +25,10 @@ class ImagesController extends Controller
                 $imagePath = $image->path;
                 $image->delete();
                 File::delete($imagePath);
-                $deletedImages = true;
+                $success = true;
             }
         }
 
-        $deletedImages
-        ? $message = 'Images deleted successfully'
-        : $message = 'No images were found';
-
-        return response()->json($message);
+        return response()->json(['success' => $success]);
     }
 }

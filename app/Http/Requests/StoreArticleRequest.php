@@ -20,7 +20,7 @@ class StoreArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'inventory_number' => 'required',
+            'inventory_number' => 'required|unique:articles',
             'description' => 'required',
             'price' => 'required|integer|min:0',
         ];
@@ -41,7 +41,8 @@ class StoreArticleRequest extends FormRequest
     public function messages()
     {
         return [
-            'inventory_number.required' => 'inventory number field is required',
+            'inventory_number.required' => 'Inventory number field is required',
+            'inventory_number.unique' => 'This inventory number allready exists',
             'description.required' => 'Description field is required',
             'price.required' => 'Price field is required',
             'price.integer' => 'Price has to be an integer',

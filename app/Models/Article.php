@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\File;
-
-
+use App\Concerns\Filterable;
+use App\Http\Filters\Filter;
 
 class Article extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug, Prunable;
+    use HasFactory, SoftDeletes, HasSlug, Prunable, Filterable;
 
 
     protected $hidden = [

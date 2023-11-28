@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use Illuminate\Http\JsonResponse;
-use App\Http\Requests\StoreArticleRequest;
-use App\Http\Requests\StoreImagesRequest;
-use App\Http\Requests\StoreInventoryRequest;
 use App\Models\Image;
+use App\Models\Article;
 use App\Models\Inventory;
+use App\Http\Filters\DepotFilter;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Requests\StoreImagesRequest;
+use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\StoreInventoryRequest;
+use App\Http\Requests\UpdateArticleRequest;
 
 /* TODO: Filtering */
-
 class ArticlesController extends Controller
 {
-    public function list(): JsonResponse
+    public function list(DepotFilter $filter): JsonResponse
     {
-        $articles = collect(Article::all());
-        
+        $articles = Article::filter($filter)->get();
+
         $deleted = Article::onlyTrashed()->get();
 
         return response()->json(['success' => true, 'articles' => $articles, 'trashed' => $deleted]);
@@ -85,7 +86,7 @@ class ArticlesController extends Controller
 
 
     public function update(
-        StoreArticleRequest $request,
+        UpdateArticleRequest $request,
         StoreImagesRequest $imgRequest,
         StoreInventoryRequest $inventoryRequest,
         string $id
@@ -93,7 +94,7 @@ class ArticlesController extends Controller
         $article = Article::findOrFail($id);
 
         $article->update([
-            'inventory_number' => $request->inventory_number,
+            // 'inventory_number' => $request->inventory_number,
             'catalog_number' => $request->catalog_number,
             'draft_number' => $request->draft_number,
             'material' => $request->material,

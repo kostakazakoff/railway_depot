@@ -13,7 +13,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 
-/* TODO: Filtering */
+
 class ArticlesController extends Controller
 {
     public function list(DepotFilter $filter): JsonResponse

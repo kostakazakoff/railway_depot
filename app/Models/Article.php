@@ -30,7 +30,7 @@ class Article extends Model
         'inventory_number',
         'catalog_number',
         'draft_number',
-        'material', // Materials?
+        'material',
         'description',
         'price',
     ];

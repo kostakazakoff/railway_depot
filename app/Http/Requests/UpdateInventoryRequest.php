@@ -7,18 +7,21 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
-class UpdateArticleRequest extends FormRequest
+class UpdateInventoryRequest extends FormRequest
 {
+    /**
+     TODO:
+     */
     public function authorize(): bool
     {
         return true;
     }
-    
 
+    
     public function rules(): array
     {
         return [
-            'price' => 'integer|min:0',
+            'quantity' => 'integer|min:1',
         ];
     }
 
@@ -37,8 +40,8 @@ class UpdateArticleRequest extends FormRequest
     public function messages()
     {
         return [
-            'price.integer' => 'Price has to be an integer',
-            'price.min' => 'Price has to be a positive number',
+            'quantity.integer' => 'Quantity field has to be an integer',
+            'quantity.min' => 'Quantity has to be a positive number',
         ];
     }
 }

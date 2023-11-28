@@ -18,6 +18,7 @@ class ArticlesController extends Controller
     public function list(): JsonResponse
     {
         $articles = collect(Article::all());
+        
         $deleted = Article::onlyTrashed()->get();
 
         return response()->json(['success' => true, 'articles' => $articles, 'trashed' => $deleted]);
@@ -119,9 +120,9 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
-        $articleImages = $article->images;
+        $articleImages = $article->images->all();
 
-        return response()->json(['success' => true, 'article' => $article]);
+        return response()->json(['success' => true, 'article' => $article, 'images' => $articleImages]);
     }
 
 

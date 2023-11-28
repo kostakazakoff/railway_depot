@@ -18,14 +18,6 @@ class StoresController extends Controller
     }
 
 
-    public function show($id): ?JsonResponse
-    {
-        $store = Store::find($id);
-
-        return  response()->json($store);
-    }
-
-
     public function depotInventories($id): JsonResponse
     {
         $inventories = Store::find($id)?->articles;

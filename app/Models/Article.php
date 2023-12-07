@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\File;
 use App\Concerns\Filterable;
 
 
@@ -59,18 +58,5 @@ class Article extends Model
     public function prunable(): Builder
     {
         return static::where('deleted_at', '!=', null);
-    }
-
-
-    protected function pruning(): void
-    {
-        $files = $this->images;
-
-        if ($files) {
-            foreach ($files as $file) {
-                Image::whereFilename($file->filename)->delete();
-                File::delete($file->path);
-            }
-        }
     }
 }

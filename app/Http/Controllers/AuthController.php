@@ -40,9 +40,11 @@ class AuthController extends Controller
     }
 
 
-    public function logout()
+    public function logout(Request $request): JsonResponse
     {
         $cookie = Cookie::forget('jwt');
+
+        $request->user()->tokens()->delete();
 
         return response()->json('You are logged out')->withCookie($cookie);
     }

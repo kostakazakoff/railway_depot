@@ -17,22 +17,33 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::controller(ArticlesController::class)->prefix('articles')->group(function () {
-    Route::get('/', 'list');
-    Route::post('/store', 'store');
-    Route::get('/{id}', 'show');
-    Route::post('/edit/{id}', 'update');
-    Route::delete('/delete/{id}', 'delete');
-    Route::get('/trashed', 'getTrashed');
-    Route::post('/empty-trash', 'pruneModel');
-    Route::get('/{id}/inventories', 'articleInventories');
-});
+Route::controller(ArticlesController::class)
+    ->prefix('articles')
+    ->middleware('auth:sanctum')
+    ->group(function () {
+        Route::get('/', 'list');
+        Route::post('/store', 'store');
+        Route::get('/{id}', 'show');
+        Route::post('/edit/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
+        Route::get('/trashed', 'getTrashed');
+        Route::post('/empty-trash', 'pruneModel');
+        Route::get('/{id}/inventories', 'articleInventories');
+    });
 
 
-Route::controller(StoresController::class)->prefix('stores')->group(function () {
-    Route::get('/', 'list');
-    Route::get('/{id}/inventories', 'depotInventories');
-});
+Route::controller(StoresController::class)
+    ->prefix('stores')
+    ->middleware('auth:sanctum')
+    ->group(function () {
+        Route::get('/', 'list');
+        Route::get('/{id}/inventories', 'depotInventories');
+    });
 
 
-Route::delete('images/delete', [ImagesController::class, 'delete']);
+Route::controller(ImagesController::class)
+    ->prefix('images')
+    ->middleware('auth:sanctum')
+    ->group(function () {
+        Route::delete('/delete', 'delete');
+    });

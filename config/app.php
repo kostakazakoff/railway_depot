@@ -71,7 +71,7 @@ return [
     TODO: Set timezone
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------

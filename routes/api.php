@@ -27,7 +27,7 @@ Route::controller(ArticlesController::class)
         Route::post('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
         Route::get('/trashed', 'getTrashed');
-        Route::post('/empty-trash', 'pruneModel');
+        Route::post('/empty-trash', 'emptyTrash');
         Route::get('/{id}/inventories', 'articleInventories');
     });
 

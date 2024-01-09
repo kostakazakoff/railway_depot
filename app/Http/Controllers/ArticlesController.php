@@ -148,10 +148,10 @@ class ArticlesController extends Controller
     }
 
 
-    public function pruneModel(): JsonResponse
+    public function emptyTrash(): JsonResponse
     {
         Artisan::call('model:prune');
 
-        return response()->json('Confirmed');
+        return response()->json('Trash is empty');
     }
 }

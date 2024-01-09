@@ -27,7 +27,7 @@ class ArticleObserver
 
         if ($files) {
             foreach ($files as $file) {
-                Image::whereFilename($file->filename)->delete();
+                Image::find($file->id)->delete();
             }
         }
     }

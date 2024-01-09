@@ -34,7 +34,7 @@ Route::controller(ArticlesController::class)
 
 Route::controller(StoresController::class)
     ->prefix('stores')
-    ->middleware('auth:sanctum')
+    // ->middleware('auth:sanctum')
     ->group(function () {
         Route::get('/', 'list');
         Route::get('/{id}/inventories', 'depotInventories');

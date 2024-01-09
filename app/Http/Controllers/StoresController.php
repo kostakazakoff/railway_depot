@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Inventory;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 
 class StoresController extends Controller
@@ -20,7 +21,21 @@ class StoresController extends Controller
 
     public function depotInventories($id): JsonResponse
     {
-        $inventories = Store::find($id)?->articles;
+        $inventories = DB::table('inventories')
+            ->leftJoin('articles', 'inventories.article_id', '=', 'articles.id')
+            ->select(
+                'description',
+                'article_id',
+                'quantity',
+                'price',
+                'position',
+                'package',
+                'inventory_number',
+                'catalog_number',
+                'draft_number',
+                'material'
+            )
+            ->get();
 
         $total = collect(Inventory::whereStoreId($id)->get())
             ->pluck('quantity', 'article_id')
@@ -29,6 +44,6 @@ class StoresController extends Controller
                 return $sum + $price * $quantity;
             }, 0);
 
-        return response()->json(['inventories' => $inventories, 'total' => $total]);
+        return response()->json(['inventories' => $inventories, 'total_cost' => $total]);
     }
 }

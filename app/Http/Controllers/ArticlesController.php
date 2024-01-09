@@ -94,6 +94,7 @@ class ArticlesController extends Controller
         $article = Article::findOrFail($id);
 
         $article_request = [
+            'inventory_number' => $request->inventory_number,
             'catalog_number' => $request->catalog_number,
             'draft_number' => $request->draft_number,
             'material' => $request->material,
@@ -101,9 +102,11 @@ class ArticlesController extends Controller
             'price' => $request->price
         ];
 
+
         foreach ($article_request as $field => $value) {
-            $article->$field ?? $article->$field = $value;
+            if ($value) $article->$field = $value;
         }
+        
 
         $article->save();
 
@@ -117,7 +120,7 @@ class ArticlesController extends Controller
         ];
 
         foreach ($inventory_request as $field => $value) {
-            $inventory->$field ?? $inventory->$field = $value;
+            if ($value) $inventory->$field = $value;
         }
 
         $inventory->save();

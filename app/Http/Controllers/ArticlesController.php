@@ -49,16 +49,6 @@ class ArticlesController extends Controller
     }
 
 
-    private function handleImages($article, $imgRequest, $inventoryRequest): void
-    {
-        $imageRequest = $imgRequest->file('images');
-
-        if ($imageRequest) {
-            $this->uploadImages($imageRequest, $article->id);
-        };
-    }
-
-
     public function store(
         StoreArticleRequest $request,
         StoreImagesRequest $imgRequest,
@@ -82,7 +72,11 @@ class ArticlesController extends Controller
             'position' => $inventoryRequest->position
         ]);
 
-        $this->handleImages($article, $imgRequest, $inventoryRequest);
+        $imageRequest = $imgRequest->file('images');
+
+        if ($imageRequest) {
+            $this->uploadImages($imageRequest, $article->id);
+        };
 
         return response()->json(['success' => true, 'article' => $article, 'inventory' => $inventory]);
     }

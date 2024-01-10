@@ -13,10 +13,13 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use Illuminate\Support\Facades\DB;
+
 
 class ArticlesController extends Controller
 {
     const IMAGES_DIR = 'images';
+
 
     public function list(DepotFilter $filter): JsonResponse
     {
@@ -137,7 +140,11 @@ class ArticlesController extends Controller
 
     public function show(string $id): ?JsonResponse
     {
-        $article = Article::findOrFail($id);
+        $article = DB::table('images')
+        ->leftJoin('articles', 'images.article_id', '=', 'articles.id')
+        ->leftJoin('inventories', 'inventories.article_id', '=', 'articles.id')
+        ->get();
+        dd($article);
 
         $articleImages = $article->images->all();
 

@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::controller(ArticlesController::class)
     ->prefix('articles')
-    // ->middleware('auth:sanctum')
+    ->middleware('auth:sanctum')
     ->group(function () {
         Route::get('/', 'list');
         Route::post('/store', 'store');
@@ -34,7 +34,7 @@ Route::controller(ArticlesController::class)
 
 Route::controller(StoresController::class)
     ->prefix('stores')
-    // ->middleware('auth:sanctum')
+    ->middleware('auth:sanctum')
     ->group(function () {
         Route::get('/', 'list');
         Route::get('/{id}/inventories', 'depotInventories');
@@ -43,7 +43,7 @@ Route::controller(StoresController::class)
 
 Route::controller(ImagesController::class)
     ->prefix('images')
-    // ->middleware('auth:sanctum')
+    ->middleware('auth:sanctum')
     ->group(function () {
         Route::delete('/delete', 'delete');
     });

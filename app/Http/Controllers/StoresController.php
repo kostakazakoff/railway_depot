@@ -44,6 +44,6 @@ class StoresController extends Controller
                 return $sum + $price * $quantity;
             }, 0);
 
-        return response()->json(['inventories' => $inventories, 'total_cost' => $total]);
+        return response()->json(['inventories' => $inventories, 'total_inventories_cost' => $total]);
     }
 }

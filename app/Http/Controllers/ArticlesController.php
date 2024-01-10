@@ -23,11 +23,26 @@ class ArticlesController extends Controller
 
     public function list(DepotFilter $filter): JsonResponse
     {
-        $articles = Article::filter($filter)->get();
+        $articles = DB::table('articles')
+        ->leftJoin('inventories', 'articles.id', '=', 'inventories.article_id')
+        ->select(
+            'inventories.article_id',
+            'description',
+            'inventory_number',
+            'catalog_number',
+            'draft_number',
+            'material',
+            'price',
+            'quantity',
+            'package',
+            'store_id',
+            'position',
+        )
+        ->get();
 
         $deleted = Article::onlyTrashed()->get();
 
-        return response()->json(['success' => true, 'articles' => $articles, 'trashed' => $deleted]);
+        return response()->json(['articles' => $articles, 'trashed' => $deleted]);
     }
 
 
@@ -41,7 +56,7 @@ class ArticlesController extends Controller
 
             $image->move($imageLocation, $imageName);
 
-            $url = asset(self::IMAGES_DIR.'/'.$imageName);
+            $url = asset(self::IMAGES_DIR . '/' . $imageName);
 
             Image::create([
                 'path' => $imageLocation . '/' . $imageName,
@@ -87,7 +102,7 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest, $inventoryRequest);
 
-        return response()->json(['success' => true, 'article' => $article, 'inventory' => $inventory]);
+        return response()->json(['article' => $article, 'inventory' => $inventory]);
     }
 
 
@@ -113,7 +128,7 @@ class ArticlesController extends Controller
         foreach ($article_request as $field => $value) {
             if ($value) $article->$field = $value;
         }
-        
+
 
         $article->save();
 
@@ -134,21 +149,19 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest, $inventoryRequest);
 
-        return response()->json(['success' => true, 'article' => $article, 'inventory' => $inventory]);
+        return response()->json(['article' => $article, 'inventory' => $inventory]);
     }
 
 
     public function show(string $id): ?JsonResponse
     {
-        $article = DB::table('images')
-        ->leftJoin('articles', 'images.article_id', '=', 'articles.id')
-        ->leftJoin('inventories', 'inventories.article_id', '=', 'articles.id')
-        ->get();
-        dd($article);
+        $article = Article::find($id);
+
+        $articleInventory = Inventory::whereArticleId($id)->get();
 
         $articleImages = $article->images->all();
 
-        return response()->json(['success' => true, 'article' => $article, 'images' => $articleImages]);
+        return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
     }
 
 

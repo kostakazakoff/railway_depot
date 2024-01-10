@@ -16,6 +16,8 @@ use App\Http\Requests\UpdateInventoryRequest;
 
 class ArticlesController extends Controller
 {
+    const IMAGES_DIR = 'images';
+
     public function list(DepotFilter $filter): JsonResponse
     {
         $articles = Article::filter($filter)->get();
@@ -26,19 +28,21 @@ class ArticlesController extends Controller
     }
 
 
-    private function uploadImages($imageRequest, $articleId): void
+    private function uploadImages($images, $articleId): void
     {
-        foreach ($imageRequest as $image) {
+        foreach ($images as $image) {
 
             $imageName = time() . '_' . $image->getClientOriginalName();
 
-            $imageLocation = storage_path('app/images');
+            $imageLocation = public_path(self::IMAGES_DIR);
 
             $image->move($imageLocation, $imageName);
 
+            $url = asset(self::IMAGES_DIR.'/'.$imageName);
+
             Image::create([
-                'filename' => $imageName,
                 'path' => $imageLocation . '/' . $imageName,
+                'url' => $url,
                 'article_id' => $articleId
             ]);
         }

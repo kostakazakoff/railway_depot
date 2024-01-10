@@ -17,7 +17,7 @@ class Image extends Model
 
     protected $hidden = ['created_on', 'updated_on'];
 
-    protected $fillable = ['filename', 'path', 'article_id'];
+    protected $fillable = ['url', 'path', 'article_id'];
 
     
     public function articles(): BelongsTo

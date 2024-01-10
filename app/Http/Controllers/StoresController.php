@@ -13,9 +13,9 @@ class StoresController extends Controller
 {
     public function list(): JsonResponse
     {
-        $articles = collect(Store::all());
+        $stores = collect(Store::all());
 
-        return response()->json($articles);
+        return response()->json($stores);
     }
 
 

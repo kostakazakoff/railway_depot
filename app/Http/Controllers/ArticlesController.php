@@ -38,6 +38,7 @@ class ArticlesController extends Controller
             'store_id',
             'position',
         )
+        ->where('articles.deleted_at', '=', null)
         ->get();
 
         $deleted = Article::onlyTrashed()->get();

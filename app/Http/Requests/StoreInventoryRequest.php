@@ -9,9 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreInventoryRequest extends FormRequest
 {
-    /**
-     TODO: Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;

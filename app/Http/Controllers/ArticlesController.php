@@ -41,9 +41,7 @@ class ArticlesController extends Controller
         ->where('articles.deleted_at', '=', null)
         ->get();
 
-        $deleted = Article::onlyTrashed()->get();
-
-        return response()->json(['articles' => $articles, 'trashed' => $deleted]);
+        return response()->json(['articles' => $articles]);
     }
 
 

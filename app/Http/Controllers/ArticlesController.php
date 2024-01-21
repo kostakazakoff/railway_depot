@@ -13,6 +13,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -21,25 +22,58 @@ class ArticlesController extends Controller
     const IMAGES_DIR = 'images';
 
 
-    public function list(DepotFilter $filter): JsonResponse
+    public function list(DepotFilter $filter, Request $request): JsonResponse
     {
         $articles = DB::table('articles')
-        ->leftJoin('inventories', 'articles.id', '=', 'inventories.article_id')
-        ->select(
-            'inventories.article_id',
-            'description',
-            'inventory_number',
-            'catalog_number',
-            'draft_number',
-            'material',
-            'price',
-            'quantity',
-            'package',
-            'store_id',
-            'position',
-        )
-        ->where('articles.deleted_at', '=', null)
-        ->get();
+            ->leftJoin('inventories', 'articles.id', '=', 'inventories.article_id')
+            ->select(
+                'inventories.article_id',
+                'description',
+                'inventory_number',
+                'catalog_number',
+                'draft_number',
+                'material',
+                'price',
+                'quantity',
+                'package',
+                'store_id',
+                'position',
+            )
+            ->where('articles.deleted_at', '=', null)
+            ->when(request('inventory_number'), function ($query, $description) {
+                return $query->where('inventory_number', 'like', '%'.$description.'%');
+            })
+            ->when(request('description'), function ($query, $description) {
+                return $query->where('description', 'like', '%'.$description.'%');
+            })
+            ->when(request('catalog_number'), function ($query, $description) {
+                return $query->where('catalog_number', 'like', '%'.$description.'%');
+            })
+            ->when(request('draft_number'), function ($query, $description) {
+                return $query->where('draft_number', 'like', '%'.$description.'%');
+            })
+            ->when(request('material'), function ($query, $description) {
+                return $query->where('material', 'like', '%'.$description.'%');
+            })
+            ->when(request('package'), function ($query, $description) {
+                return $query->where('package', 'like', '%'.$description.'%');
+            })
+            ->when(request('position'), function ($query, $description) {
+                return $query->where('position', 'like', '%'.$description.'%');
+            })
+            ->when(request('min_price'), function ($query, $description) {
+                return $query->where('price', '>=', $description);
+            })
+            ->when(request('max_price'), function ($query, $description) {
+                return $query->where('price', '<=', $description);
+            })
+            ->when(request('min_quantity'), function ($query, $description) {
+                return $query->where('quantity', '>=', $description);
+            })
+            ->when(request('max_quantity'), function ($query, $description) {
+                return $query->where('quantity', '<=', $description);
+            })
+            ->get();
 
         return response()->json(['articles' => $articles]);
     }

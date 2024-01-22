@@ -36,7 +36,8 @@ class StoresController extends Controller
                 'inventory_number',
                 'catalog_number',
                 'draft_number',
-                'material'
+                'material',
+                'stores.name'
             )
             ->get();
 

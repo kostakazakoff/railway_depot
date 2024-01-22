@@ -160,13 +160,13 @@ class ArticlesController extends Controller
             'price' => $request->price
         ];
 
-
         foreach ($article_request as $field => $value) {
-            if ($value) $article->$field = $value;
+            $value && $article->$field = $value;
         }
 
-
-        $article->save();
+        !$article->quantity
+        ? $article->delete()
+        : $article->save();
 
         $inventory = Inventory::whereArticleId($id)->first();
 
@@ -216,5 +216,25 @@ class ArticlesController extends Controller
         Artisan::call('model:prune');
 
         return response()->json('Trash is empty');
+    }
+
+
+    public function restoreArticle($id): JsonResponse
+    {
+        $article = Article::onlyTrashed()->findOrFail($id);
+        $article->deleted_at = null;
+
+        $article->save();
+
+        return response()->json('Article '.$article->slug.' restored successfully');
+    }
+
+
+    public function getTrashed(): JsonResponse
+    {
+        $trashedArticles = Article::onlyTrashed()->get();
+        dd($trashedArticles);
+
+        return response()->json(['trashed' => $trashedArticles]);
     }
 }

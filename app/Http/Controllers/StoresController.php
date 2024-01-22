@@ -23,6 +23,9 @@ class StoresController extends Controller
     {
         $inventories = DB::table('inventories')
             ->leftJoin('articles', 'inventories.article_id', '=', 'articles.id')
+            ->leftJoin('stores', 'inventories.store_id', '=', 'stores.id')
+            ->where('stores.id', '=', $id)
+            ->where('articles.deleted_at', '=', null)
             ->select(
                 'description',
                 'article_id',

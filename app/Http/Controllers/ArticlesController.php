@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Article;
 use App\Models\Inventory;
+use App\Models\Store;
 use App\Http\Filters\DepotFilter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;
@@ -22,62 +23,79 @@ class ArticlesController extends Controller
     const IMAGES_DIR = 'images';
 
 
-    public function list(DepotFilter $filter, Request $request): JsonResponse
-    {
-        $articles = DB::table('inventories', 'i')
-            // ->leftJoin('inventories', 'articles.id', '=', 'inventories.article_id')
-            ->leftJoin('articles', 'i.article_id', '=', 'articles.id')
-            ->leftJoin('stores', 'i.store_id', '=', 'stores.id')
-            ->select(
-                'i.article_id',
-                'articles.description',
-                'articles.inventory_number',
-                'articles.catalog_number',
-                'articles.draft_number',
-                'articles.material',
-                'articles.price',
-                'i.quantity',
-                'i.package',
-                'i.store_id',
-                'i.position',
-                'stores.name'
-            )
-            ->where('articles.deleted_at', '=', null)
-            ->when(request('inventory_number'), function ($query, $description) {
-                return $query->where('inventory_number', 'like', '%' . $description . '%');
-            })
-            ->when(request('description'), function ($query, $description) {
-                return $query->where('description', 'like', '%' . $description . '%');
-            })
-            ->when(request('catalog_number'), function ($query, $description) {
-                return $query->where('catalog_number', 'like', '%' . $description . '%');
-            })
-            ->when(request('draft_number'), function ($query, $description) {
-                return $query->where('draft_number', 'like', '%' . $description . '%');
-            })
-            ->when(request('material'), function ($query, $description) {
-                return $query->where('material', 'like', '%' . $description . '%');
-            })
-            ->when(request('package'), function ($query, $description) {
-                return $query->where('package', 'like', '%' . $description . '%');
-            })
-            ->when(request('position'), function ($query, $description) {
-                return $query->where('position', 'like', '%' . $description . '%');
-            })
-            ->when(request('min_price'), function ($query, $description) {
-                return $query->where('price', '>=', $description);
-            })
-            ->when(request('max_price'), function ($query, $description) {
-                return $query->where('price', '<=', $description);
-            })
-            ->when(request('min_quantity'), function ($query, $description) {
-                return $query->where('quantity', '>=', $description);
-            })
-            ->when(request('max_quantity'), function ($query, $description) {
-                return $query->where('quantity', '<=', $description);
-            })
-            ->get();
+    // public function list(DepotFilter $filter, Request $request): JsonResponse
+    // {
+    //     $articles = DB::table('inventories', 'i')
+    //         // ->leftJoin('inventories', 'articles.id', '=', 'inventories.article_id')
+    //         ->leftJoin('articles', 'i.article_id', '=', 'articles.id')
+    //         ->leftJoin('stores', 'i.store_id', '=', 'stores.id')
+    //         ->select(
+    //             'i.article_id',
+    //             'articles.description',
+    //             'articles.inventory_number',
+    //             'articles.catalog_number',
+    //             'articles.draft_number',
+    //             'articles.material',
+    //             'articles.price',
+    //             'i.quantity',
+    //             'i.package',
+    //             'i.store_id',
+    //             'i.position',
+    //             'stores.name'
+    //         )
+    //         ->where('articles.deleted_at', '=', null)
+    //         ->when(request('inventory_number'), function ($query, $description) {
+    //             return $query->where('inventory_number', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('description'), function ($query, $description) {
+    //             return $query->where('description', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('catalog_number'), function ($query, $description) {
+    //             return $query->where('catalog_number', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('draft_number'), function ($query, $description) {
+    //             return $query->where('draft_number', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('material'), function ($query, $description) {
+    //             return $query->where('material', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('package'), function ($query, $description) {
+    //             return $query->where('package', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('position'), function ($query, $description) {
+    //             return $query->where('position', 'like', '%' . $description . '%');
+    //         })
+    //         ->when(request('min_price'), function ($query, $description) {
+    //             return $query->where('price', '>=', $description);
+    //         })
+    //         ->when(request('max_price'), function ($query, $description) {
+    //             return $query->where('price', '<=', $description);
+    //         })
+    //         ->when(request('min_quantity'), function ($query, $description) {
+    //             return $query->where('quantity', '>=', $description);
+    //         })
+    //         ->when(request('max_quantity'), function ($query, $description) {
+    //             return $query->where('quantity', '<=', $description);
+    //         })
+    //         ->get();
 
+    //     return response()->json(['articles' => $articles]);
+    // }
+
+
+    public function list(DepotFilter $filter): JsonResponse
+    {
+        $articles = Article::filter($filter)->get();
+        foreach ($articles as $key => $article) {
+            $article->images && $article['images'] = $article->images;
+
+            $inventory = Inventory::whereArticleId($article->id)->first();
+            $inventory && $article['inventory'] = $inventory;
+
+            $store = Store::whereId($article->inventory->store_id)->first();
+            $store && $article['store'] = $store;
+        }
+        
         return response()->json(['articles' => $articles]);
     }
 

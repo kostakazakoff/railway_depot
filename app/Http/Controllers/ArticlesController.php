@@ -87,13 +87,20 @@ class ArticlesController extends Controller
     {
         $articles = Article::filter($filter)->get();
         foreach ($articles as $key => $article) {
-            $article->images && $article['images'] = $article->images;
+            $article->images
+            ? $article['images'] = $article->images
+            : $article['images'] = [];
+            ;
 
             $inventory = Inventory::whereArticleId($article->id)->first();
-            $inventory && $article['inventory'] = $inventory;
+            $inventory
+            ? $article['inventory'] = $inventory
+            : $article['inventory'] = null;
 
             $store = Store::whereId($article->inventory->store_id)->first();
-            $store && $article['store'] = $store;
+            $store
+            ? $article['store'] = $store
+            : $article['store'] = null;
         }
         
         return response()->json(['articles' => $articles]);

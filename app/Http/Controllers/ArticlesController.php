@@ -14,8 +14,8 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
 
 
 class ArticlesController extends Controller

@@ -7,7 +7,7 @@ use App\Models\Image;
 use App\Models\Inventory;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 
 
 class StoresController extends Controller
@@ -35,8 +35,7 @@ class StoresController extends Controller
             $images && $inventory['images'] = $images;
         }
 
-        $totalCost = Inventory::whereStoreId($id)
-            ->get()
+        $totalCost = $inventories
             ->pluck('quantity', 'article_id')
             ->reduce(function ($sum, $quantity, $article_id) {
                 $price = Article::find($article_id)?->price;

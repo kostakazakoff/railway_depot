@@ -27,7 +27,7 @@ class StoresController extends Controller
         $store = Store::find($id);
 
         foreach ($inventories as $key => $inventory) {
-            $article = Article::whereId($inventory->article_id)->get();
+            $article = Article::find($inventory->article_id);
 
             $inventory['article'] = $article;
 
@@ -35,7 +35,8 @@ class StoresController extends Controller
             $images && $inventory['images'] = $images;
         }
 
-        $totalCost = collect(Inventory::whereStoreId($id)->get())
+        $totalCost = Inventory::whereStoreId($id)
+            ->get()
             ->pluck('quantity', 'article_id')
             ->reduce(function ($sum, $quantity, $article_id) {
                 $price = Article::find($article_id)?->price;

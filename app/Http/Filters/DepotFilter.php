@@ -19,12 +19,6 @@ class DepotFilter extends Filter
         return $this->builder->where('inventory_number', 'like', "%{$value}%");
     }
 
-
-    public function store(string $value = null): Builder
-    {
-        return $this->builder->where('store_id', $value);
-    }
-
     
     public function sort(array $value = []): Builder
     {

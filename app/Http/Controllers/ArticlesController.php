@@ -14,6 +14,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+
 // use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\DB;
 
@@ -86,11 +87,12 @@ class ArticlesController extends Controller
     public function list(DepotFilter $filter): JsonResponse
     {
         $articles = Article::filter($filter)->get();
-        foreach ($articles as $key => $article) {
+        $totalCost = 0;
+
+        foreach ($articles as $article) {
             $article->images
             ? $article['images'] = $article->images
             : $article['images'] = [];
-            ;
 
             $inventory = Inventory::whereArticleId($article->id)->first();
             $inventory
@@ -101,9 +103,11 @@ class ArticlesController extends Controller
             $store
             ? $article['store'] = $store
             : $article['store'] = null;
+
+            $totalCost += $article->price * $article->inventory->quantity;
         }
         
-        return response()->json(['articles' => $articles]);
+        return response()->json(['articles' => $articles, 'totalCost' => $totalCost]);
     }
 
 

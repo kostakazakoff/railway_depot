@@ -24,7 +24,7 @@ class StoresController extends Controller
     {
         $inventories = Inventory::whereStoreId($id)->get();
 
-        $store = Store::whereId($id)->get();
+        $store = Store::find($id);
 
         foreach ($inventories as $key => $inventory) {
             $article = Article::whereId($inventory->article_id)->get();

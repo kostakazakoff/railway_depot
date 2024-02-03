@@ -190,7 +190,7 @@ class ArticlesController extends Controller
             $value && $article->$field = $value;
         }
 
-        !$article->quantity
+        !$article->quantity <= 0
         ? $article->delete()
         : $article->save();
 

@@ -128,7 +128,7 @@ class ArticlesController extends Controller
         }
     }
 
-
+// TODO: $inventoryRequest ?
     private function handleImages($article, $imgRequest, $inventoryRequest): void
     {
         $imageRequest = $imgRequest->file('images');

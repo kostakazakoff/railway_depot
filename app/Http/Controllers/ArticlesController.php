@@ -83,27 +83,23 @@ class ArticlesController extends Controller
 
     public function list(DepotFilter $filter): JsonResponse
     {
-        $articles = Article::filter($filter)->get();
+        $articles = Article::filter($filter)
+            ->with('images')
+            ->with('stores')
+            ->get();
+
         $totalCost = 0;
 
         foreach ($articles as $article) {
-            $article->images
-            ? $article['images'] = $article->images
-            : $article['images'] = [];
 
             $inventory = Inventory::whereArticleId($article->id)->first();
             $inventory
-            ? $article['inventory'] = $inventory
-            : $article['inventory'] = null;
-
-            $store = Store::whereId($article->inventory->store_id)->first();
-            $store
-            ? $article['store'] = $store
-            : $article['store'] = null;
+                ? $article['inventory'] = $inventory
+                : $article['inventory'] = null;
 
             $totalCost += $article->price * $article->inventory->quantity;
         }
-        
+
         return response()->json(['articles' => $articles, 'totalCost' => $totalCost]);
     }
 
@@ -128,7 +124,7 @@ class ArticlesController extends Controller
         }
     }
 
-    
+
     private function handleImages($article, $imgRequest): void
     {
         $imageRequest = $imgRequest->file('images');
@@ -191,8 +187,8 @@ class ArticlesController extends Controller
         }
 
         !$article->quantity <= 0
-        ? $article->delete()
-        : $article->save();
+            ? $article->delete()
+            : $article->save();
 
         $inventory = Inventory::whereArticleId($id)->first();
 
@@ -226,7 +222,7 @@ class ArticlesController extends Controller
         return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
     }
 
-// TODO: Article - soft delete? Inventory - soft delete...
+    // TODO: Article - soft delete? Inventory - soft delete...
     public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);
@@ -252,7 +248,7 @@ class ArticlesController extends Controller
 
         $article->save();
 
-        return response()->json('Article '.$article->slug.' restored successfully');
+        return response()->json('Article ' . $article->slug . ' restored successfully');
     }
 
 

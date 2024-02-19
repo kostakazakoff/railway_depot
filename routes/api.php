@@ -25,7 +25,7 @@ Route::controller(ArticlesController::class)
         Route::post('/store', 'store');
         Route::get('/{id}', 'show');
         Route::post('/edit/{id}', 'update');
-        Route::delete('/delete/{id}', 'delete');
+        Route::post('/delete/{id}', 'delete');
         Route::post('/restore/{id}', 'restoreArticle');
         Route::get('/show-trash', 'getTrashed');
         Route::post('/empty-trash', 'emptyTrash');

@@ -128,8 +128,8 @@ class ArticlesController extends Controller
         }
     }
 
-// TODO: $inventoryRequest ?
-    private function handleImages($article, $imgRequest, $inventoryRequest): void
+    
+    private function handleImages($article, $imgRequest): void
     {
         $imageRequest = $imgRequest->file('images');
 
@@ -144,6 +144,7 @@ class ArticlesController extends Controller
         StoreImagesRequest $imgRequest,
         StoreInventoryRequest $inventoryRequest
     ): JsonResponse {
+        dd($request, $imgRequest, $inventoryRequest);
 
         $article = Article::create([
             'inventory_number' => $request->inventory_number,
@@ -162,7 +163,7 @@ class ArticlesController extends Controller
             'position' => $inventoryRequest->position
         ]);
 
-        $this->handleImages($article, $imgRequest, $inventoryRequest);
+        $this->handleImages($article, $imgRequest);
 
         return response()->json(['article' => $article, 'inventory' => $inventory]);
     }

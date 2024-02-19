@@ -46,5 +46,5 @@ Route::controller(ImagesController::class)
     ->prefix('images')
     ->middleware('auth:sanctum')
     ->group(function () {
-        Route::delete('/delete', 'delete');
+        Route::post('/delete', 'delete');
     });

@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Models\Image;
 use App\Models\Article;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class ArticleObserver
 {
@@ -23,6 +23,11 @@ class ArticleObserver
     
     public function deleted(Article $article): void
     {
+        $inventoryToDelete = DB::table('inventories')
+        ->where('inventories.article_id', $article->id);
+
+        $inventoryToDelete->delete();
+
         $files = $article->images;
 
         if ($files) {

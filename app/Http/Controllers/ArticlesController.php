@@ -144,7 +144,6 @@ class ArticlesController extends Controller
         StoreImagesRequest $imgRequest,
         StoreInventoryRequest $inventoryRequest
     ): JsonResponse {
-        dd($request, $imgRequest, $inventoryRequest);
 
         $article = Article::create([
             'inventory_number' => $request->inventory_number,
@@ -222,12 +221,12 @@ class ArticlesController extends Controller
 
         $articleInventory = Inventory::whereArticleId($id)->get();
 
-        $articleImages = $article->images->all();
+        $articleImages = $article?->images->all();
 
         return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
     }
 
-
+// TODO: Article - soft delete? Inventory - soft delete...
     public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);

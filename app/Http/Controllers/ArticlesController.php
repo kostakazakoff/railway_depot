@@ -222,7 +222,6 @@ class ArticlesController extends Controller
         return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
     }
 
-    // TODO: Article - soft delete? Inventory - soft delete...
     public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);

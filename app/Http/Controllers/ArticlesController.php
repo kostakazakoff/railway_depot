@@ -14,7 +14,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
-
+use Symfony\Component\HttpFoundation\Request;
 
 class ArticlesController extends Controller
 {
@@ -81,7 +81,7 @@ class ArticlesController extends Controller
     // }
 
 
-    public function list(DepotFilter $filter): JsonResponse
+    public function list(Request $request, DepotFilter $filter): JsonResponse
     {
         $articles = Article::filter($filter)
             ->with('images')
@@ -127,10 +127,10 @@ class ArticlesController extends Controller
 
     private function handleImages($article, $imgRequest): void
     {
-        $imageRequest = $imgRequest->file('images');
+        $files = $imgRequest->file('images');
 
-        if ($imageRequest) {
-            $this->uploadImages($imageRequest, $article->id);
+        if ($files) {
+            $this->uploadImages($files, $article->id);
         };
     }
 
@@ -222,7 +222,7 @@ class ArticlesController extends Controller
         return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
     }
 
-    // TODO: Article - soft delete? Inventory - soft delete...
+
     public function delete($id): ?JsonResponse
     {
         $article = Article::findOrFail($id);

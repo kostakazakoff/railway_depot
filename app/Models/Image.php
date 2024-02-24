@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Prunable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\File;
+// use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\Prunable;
+// use Illuminate\Database\Eloquent\Builder;
+// use Illuminate\Support\Facades\File;
 
 
 class Image extends Model
 {
-    use HasFactory, SoftDeletes, Prunable;
+    use HasFactory;
 
     protected $hidden = ['created_on', 'updated_on'];
 
@@ -26,13 +26,13 @@ class Image extends Model
     }
 
 
-    public function prunable(): Builder
-    {
-        return static::where('deleted_at', '!=', null);
-    }
+    // public function prunable(): Builder
+    // {
+    //     return static::where('deleted_at', '!=', null);
+    // }
 
-    public function pruning(): void
-    {
-        File::delete($this->path);
-    }
+    // public function pruning(): void
+    // {
+    //     File::delete($this->path);
+    // }
 }

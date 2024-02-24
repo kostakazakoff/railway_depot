@@ -83,6 +83,10 @@ class ArticlesController extends Controller
 
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
+        $store = $request->query->get('store');
+        $position = $request->query->get('position');
+        $package = $request->query->get('package');
+
         $articles = Article::filter($filter)
             ->with('images')
             ->with('stores')
@@ -91,12 +95,23 @@ class ArticlesController extends Controller
         $totalCost = 0;
 
         foreach ($articles as $article) {
-
             $inventory = Inventory::whereArticleId($article->id)->first();
             $inventory
                 ? $article['inventory'] = $inventory
                 : $article['inventory'] = null;
+        }
 
+        $store &&
+        $articles = $articles
+            ->filter(function ($article) use ($store) {
+                return $article->stores[0]->id == $store;
+            });
+
+        // $position &&
+        // $articles = $articles
+        // ->where()
+
+        foreach ($articles as $article) {
             $totalCost += $article->price * $article->inventory->quantity;
         }
 

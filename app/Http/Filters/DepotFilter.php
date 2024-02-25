@@ -43,6 +43,17 @@ class DepotFilter extends Filter
         return $this->builder->where('price', '<=', $value);
     }
 
+    public function from_date(string $value = null): Builder
+    {
+        $date = date('Y-m-d', strtotime($value));
+        return $this->builder->where('created_at', '>=', $date);
+    }
+
+    public function to_date(string $value = null): Builder
+    {
+        return $this->builder->where('created_at', '<=', $value);
+    }
+
     public function sort(array $value = []): Builder
     {
         if (isset($value['by']) && ! Schema::hasColumn('articles', $value['by'])) {

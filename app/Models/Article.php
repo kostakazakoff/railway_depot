@@ -15,13 +15,6 @@ class Article extends Model
     use HasFactory, HasSlug, Filterable;
 
 
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
-
-
     protected $fillable = [
         'inventory_number',
         'catalog_number',

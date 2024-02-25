@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
+// TODO: Admin, users
 
 class AuthController extends Controller
 {
@@ -30,7 +31,7 @@ class AuthController extends Controller
             return response()->json(Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = Auth::user();
+        $user = auth()->user();
         
         $token = $user->createToken('token')->plainTextToken;
 

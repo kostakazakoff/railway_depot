@@ -17,7 +17,7 @@ class StoreArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'inventory_number' => 'required|unique:articles',
+            'inventory_number' => 'required',
             'description' => 'required',
             'price' => 'required|integer|min:0',
         ];

@@ -84,6 +84,8 @@ class ArticlesController extends Controller
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
         $store = $request->query->get('store');
+        $min_quantity = $request->query->get('min_quantity');
+        $max_quantity = $request->query->get('max_quantity');
         $position = $request->query->get('position');
         $package = $request->query->get('package');
 
@@ -102,20 +104,40 @@ class ArticlesController extends Controller
         }
 
         $store &&
-        $articles = $articles
+            $articles = $articles
             ->filter(function ($article) use ($store) {
                 return $article->stores[0]->id == $store;
             });
 
-        // $position &&
-        // $articles = $articles
-        // ->where()
+        $min_quantity &&
+            $articles = $articles
+            ->filter(function ($article) use ($min_quantity) {
+                return $article->inventory->quantity >= $min_quantity;
+            });
+
+        $max_quantity &&
+            $articles = $articles
+            ->filter(function ($article) use ($max_quantity) {
+                return $article->inventory->quantity <= $max_quantity;
+            });
+
+        $position &&
+            $articles = $articles
+            ->filter(function ($article) use ($position) {
+                return strstr($article->inventory->position, $position);
+            });
+
+        $package &&
+            $articles = $articles
+            ->filter(function ($article) use ($package) {
+                return strstr($article->inventory->package, $package);
+            });
 
         foreach ($articles as $article) {
             $totalCost += $article->price * $article->inventory->quantity;
         }
 
-        return response()->json(['articles' => $articles, 'totalCost' => $totalCost]);
+        return response()->json(['articles' => [...$articles], 'totalCost' => $totalCost]);
     }
 
 

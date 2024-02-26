@@ -10,6 +10,7 @@ class StoreSeeder extends Seeder
 {
     public function run(): void
     {
+        Store::create(['name' => '']);
         Store::create(['name' => 'T345']);
         Store::create(['name' => 'T5789']);
         Store::create(['name' => 'T9875']);

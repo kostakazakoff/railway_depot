@@ -9,6 +9,7 @@ use App\Http\Controllers\StoresController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::get('stores', [StoresController::class, 'list']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -30,15 +31,6 @@ Route::controller(ArticlesController::class)
         Route::get('/show-trash', 'getTrashed');
         Route::post('/empty-trash', 'emptyTrash');
         Route::get('/{id}/inventories', 'articleInventories');
-    });
-
-
-Route::controller(StoresController::class)
-    ->prefix('stores')
-    ->middleware('auth:sanctum')
-    ->group(function () {
-        Route::get('/', 'list');
-        Route::get('/{id}/inventories', 'depotInventories');
     });
 
 

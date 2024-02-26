@@ -51,7 +51,7 @@ class DepotFilter extends Filter
 
     public function to_date(string $value = null): Builder
     {
-        return $this->builder->where('created_at', '<=', $value);
+            return $this->builder->where('created_at', '<=', $value);
     }
 
     public function sort(array $value = []): Builder

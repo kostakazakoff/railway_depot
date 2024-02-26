@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +10,7 @@ use App\Concerns\Filterable;
 
 class Article extends Model
 {
-    use HasFactory, HasSlug, Filterable;
+    use HasFactory, Filterable;
 
 
     protected $fillable = [
@@ -23,14 +21,6 @@ class Article extends Model
         'description',
         'price',
     ];
-
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom('inventory_number')
-            ->saveSlugsTo('slug');
-    }
 
 
     public function stores()

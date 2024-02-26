@@ -103,8 +103,6 @@ class ArticlesController extends Controller
                 : $article['inventory'] = null;
         }
 
-        // TODO: Филтриране по дата
-
         $store &&
             $articles = $articles
             ->filter(function ($article) use ($store) {

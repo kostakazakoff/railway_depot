@@ -15,6 +15,8 @@ Route::get('stores', [StoresController::class, 'list']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('me',  [AuthController::class, 'me']);
+    Route::post('delete_me',  [AuthController::class, 'delete_me']);
+    Route::post('destroy_user/{id}', [AuthController::class, 'destroy']);
 });
 
 

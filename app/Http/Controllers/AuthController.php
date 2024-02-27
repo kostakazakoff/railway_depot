@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,5 +67,27 @@ class AuthController extends Controller
     public function me()
     {
         return Auth::user();
+    }
+
+
+    public function destroy(string $id)
+    {
+        $userToDelete = User::find($id);
+        
+        $userToDelete->delete();
+
+        return response()->json('User '.$userToDelete->email.' destroyed successfully');
+    }
+
+
+    public function delete_me(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        // $cookie = Cookie::forget('jwt');
+
+        echo($user);
+
+        return response()->json('User '.$user->email.' deleted')->withCookie($cookie);
     }
 }

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-// TODO: Admin, users
 
 class AuthController extends Controller
 {
@@ -22,7 +21,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:4'],
         ]);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => 'fix errors', 'errors' => $validator->errors()], 500);
         }
 
@@ -42,7 +41,7 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $token = $user->createToken('token')->plainTextToken;
 
         $cookie = cookie('jwt', $token, 24 * 60, httpOnly: false);
@@ -70,13 +69,19 @@ class AuthController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function delete_user(string $id)
     {
         $userToDelete = User::find($id);
-        
-        $userToDelete->delete();
 
-        return response()->json('User '.$userToDelete->email.' destroyed successfully');
+        if (
+            $userToDelete
+            && (auth()->user()->role === 'admin' || auth()->user()->role === 'superuser')
+        ) {
+            $userToDelete->delete();
+            return response()->json('User ' . $userToDelete->email . ' destroyed successfully');
+        }
+
+        return response()->json('Can\'t delete user');
     }
 
 
@@ -84,10 +89,12 @@ class AuthController extends Controller
     {
         $user = auth()->user();
 
-        // $cookie = Cookie::forget('jwt');
+        if ($user) {
+            $cookie = Cookie::forget('jwt');
+            $user->delete();
+            return response()->json('User ' . $user->email . ' deleted')->withCookie($cookie);
+        }
 
-        echo($user);
-
-        return response()->json('User '.$user->email.' deleted')->withCookie($cookie);
+        return response()->json('No user loged in')->withCookie($cookie);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Article;
 use App\Models\Inventory;
-use App\Models\Store;
 use App\Http\Filters\DepotFilter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Artisan;

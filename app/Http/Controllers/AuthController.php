@@ -36,7 +36,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (!Auth::attempt($request->only('email', 'password', 'role'))) {
             return response()->json(Response::HTTP_UNAUTHORIZED);
         }
 
@@ -66,6 +66,13 @@ class AuthController extends Controller
     public function me()
     {
         return Auth::user();
+    }
+
+    // TODO: user_profile table && one2one relationship with user
+    // Fields: First name, Last name, Phone
+    public function edit_profile(): JsonResponse
+    {
+        return response()->json('Edit');
     }
 
 

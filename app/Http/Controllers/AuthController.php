@@ -48,7 +48,8 @@ class AuthController extends Controller
 
         return response([
             'user' => $user,
-            'jwt' => $token
+            'jwt' => $token,
+            'message' => 'success',
         ])->withCookie($cookie);
     }
 
@@ -59,7 +60,7 @@ class AuthController extends Controller
 
         $request->user()->tokens()->delete();
 
-        return response()->json('You are logged out')->withCookie($cookie);
+        return response()->json(['message' => 'success'])->withCookie($cookie);
     }
 
 
@@ -85,10 +86,10 @@ class AuthController extends Controller
             && (auth()->user()->role === 'admin' || auth()->user()->role === 'superuser')
         ) {
             $userToDelete->delete();
-            return response()->json('User ' . $userToDelete->email . ' destroyed successfully');
+            return response()->json(['message' => 'success']);
         }
 
-        return response()->json('Can\'t delete user');
+        return response()->json(['message' => 'fail']);
     }
 
 
@@ -99,9 +100,9 @@ class AuthController extends Controller
         if ($user) {
             $cookie = Cookie::forget('jwt');
             $user->delete();
-            return response()->json('User ' . $user->email . ' deleted')->withCookie($cookie);
+            return response()->json(['message' => 'success'])->withCookie($cookie);
         }
 
-        return response()->json('No user loged in')->withCookie($cookie);
+        return response()->json(['message' => 'fail']);
     }
 }

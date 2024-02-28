@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::controller(ArticlesController::class)
     ->prefix('articles')
-    ->middleware('auth:sanctum')
+    ->middleware('auth:sanctum', 'check.role')
     ->group(function () {
         Route::get('/', 'list');
         Route::post('/store', 'store');

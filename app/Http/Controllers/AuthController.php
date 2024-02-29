@@ -73,16 +73,6 @@ class AuthController extends Controller
     }
 
 
-    // public function me(): JsonResponse
-    // {
-    //     $user = auth()->user();
-
-    //     $profile = Profile::getByID($user->id);
-
-    //     return response()->json(['user' => $user, 'profile' => $profile]);
-    // }
-
-
     public function edit_user_profile(): JsonResponse
     {
         //TODO:

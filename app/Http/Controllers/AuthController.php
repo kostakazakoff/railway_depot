@@ -74,7 +74,7 @@ class AuthController extends Controller
     }
 
     // TODO:
-    public function edit_profile(): JsonResponse
+    public function edit_my_profile(): JsonResponse
     {
         return response()->json('Edit');
     }
@@ -117,7 +117,7 @@ class AuthController extends Controller
         if (!$users) {
             return response()->json(['message' => 'fail']);
         }
-        
+
         return response()->json(['users' => User::with('profile')->get(), 'message' => 'success']);
     }
 }

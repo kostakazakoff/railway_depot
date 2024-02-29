@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,6 +28,10 @@ class AuthController extends Controller
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password)
+        ]);
+
+        $profile = Profile::create([
+            'user_id' => $user->id
         ]);
 
         return response()->json($user);
@@ -68,7 +73,7 @@ class AuthController extends Controller
         return Auth::user();
     }
 
-
+    // TODO:
     public function edit_profile(): JsonResponse
     {
         return response()->json('Edit');

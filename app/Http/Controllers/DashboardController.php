@@ -31,12 +31,12 @@ class DashboardController extends Controller
 
     public function users_list(): JsonResponse
     {
-        $users = User::with('profile')->get();
+        $users = User::all()->load('profile');
 
         if (!$users) {
             return response()->json(['message' => 'fail']);
         }
 
-        return response()->json(['users' => User::with('profile')->get(), 'message' => 'success']);
+        return response()->json(['users' => [...$users], 'message' => 'success']);
     }
 }

@@ -46,6 +46,8 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
+        $profile = Profile::whereUserId($user->id)->first();
+
         $token = $user->createToken('token')->plainTextToken;
 
         $cookie = cookie('jwt', $token, 24 * 60, httpOnly: false);
@@ -54,6 +56,9 @@ class AuthController extends Controller
             'user' => $user,
             'jwt' => $token,
             'message' => 'success',
+            'first_name' => $profile->first_name,
+            'last_name' => $profile->last_name,
+            'phone' => $profile->phone,
         ])->withCookie($cookie);
     }
 
@@ -68,9 +73,13 @@ class AuthController extends Controller
     }
 
 
-    public function me()
+    public function me(): JsonResponse
     {
-        return Auth::user();
+        $user = auth()->user();
+
+        $profile = Profile::getByID($user->id);
+
+        return response()->json(['user' => $user, 'profile' => $profile]);
     }
 
 

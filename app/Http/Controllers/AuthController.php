@@ -108,4 +108,16 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'fail']);
     }
+
+
+    public function users_list(): JsonResponse
+    {
+        $users = User::with('profile')->get();
+
+        if (!$users) {
+            return response()->json(['message' => 'fail']);
+        }
+        
+        return response()->json(['users' => User::with('profile')->get(), 'message' => 'success']);
+    }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\StoresController;
 
@@ -16,11 +17,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('delete_me',  [AuthController::class, 'delete_me']);
     Route::post('edit_my_profile', [AuthController::class, 'edit_my_profile']);
-    Route::post('delete_user/{id}', [AuthController::class, 'delete_user'])
-        ->middleware('check.role');
-    Route::get('users_list', [AuthController::class, 'users_list'])
-        ->middleware('check.admin');
 });
+
+
+Route::controller(DashboardController::class)
+    ->prefix('dashboard')
+    ->middleware('auth:sanctum', 'check.admin')
+    ->group(function () {
+        Route::get('users_list', 'users_list');
+        Route::post('delete_user/{id}', 'delete_user');
+    });
 
 
 Route::controller(ArticlesController::class)

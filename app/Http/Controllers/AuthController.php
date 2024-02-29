@@ -73,33 +73,10 @@ class AuthController extends Controller
     }
 
 
-    public function edit_user_profile(): JsonResponse
-    {
-        //TODO:
-        return response()->json('Edit user profile');
-    }
-
-
     public function edit_my_profile(): JsonResponse
     {
         // TODO:
         return response()->json('Edit my profile');
-    }
-
-
-    public function delete_user(string $id)
-    {
-        $userToDelete = User::find($id);
-
-        if (
-            $userToDelete
-            && (auth()->user()->role === 'admin' || auth()->user()->role === 'superuser')
-        ) {
-            $userToDelete->delete();
-            return response()->json(['message' => 'success']);
-        }
-
-        return response()->json(['message' => 'fail']);
     }
 
 
@@ -114,17 +91,5 @@ class AuthController extends Controller
         }
 
         return response()->json(['message' => 'fail']);
-    }
-
-
-    public function users_list(): JsonResponse
-    {
-        $users = User::with('profile')->get();
-
-        if (!$users) {
-            return response()->json(['message' => 'fail']);
-        }
-
-        return response()->json(['users' => User::with('profile')->get(), 'message' => 'success']);
     }
 }

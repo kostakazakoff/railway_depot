@@ -73,10 +73,18 @@ class AuthController extends Controller
         return Auth::user();
     }
 
-    // TODO:
+
+    public function edit_user_profile(): JsonResponse
+    {
+        //TODO:
+        return response()->json('Edit user profile');
+    }
+
+
     public function edit_my_profile(): JsonResponse
     {
-        return response()->json('Edit');
+        // TODO:
+        return response()->json('Edit my profile');
     }
 
 

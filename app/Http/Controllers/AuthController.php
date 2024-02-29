@@ -68,8 +68,7 @@ class AuthController extends Controller
         return Auth::user();
     }
 
-    // TODO: user_profile table && one2one relationship with user
-    // Fields: First name, Last name, Phone
+
     public function edit_profile(): JsonResponse
     {
         return response()->json('Edit');

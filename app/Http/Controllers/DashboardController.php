@@ -37,6 +37,16 @@ class DashboardController extends Controller
             return response()->json(['message' => 'fail']);
         }
 
-        return response()->json(['users' => $users, 'message' => 'success']);
+        $result = [];
+
+        foreach ($users as $user) {
+            if ($user->role === 'superuser' || $user->id == auth()->user()->id) {
+                continue;
+            }
+            $id = $user['id'];
+            $result[$id] = $user;
+        }
+
+        return response()->json(['users' => $result, 'message' => 'success']);
     }
 }

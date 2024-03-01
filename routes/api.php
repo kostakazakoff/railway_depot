@@ -25,6 +25,7 @@ Route::controller(DashboardController::class)
     ->middleware('auth:sanctum', 'check.admin')
     ->group(function () {
         Route::get('users_list', 'users_list');
+        Route::post('edit_user/{id}', 'edit_user');
         Route::post('delete_user/{id}', 'delete_user');
     });
 

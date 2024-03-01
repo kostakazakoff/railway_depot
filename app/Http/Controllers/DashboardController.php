@@ -9,13 +9,6 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function edit_user_profile(): JsonResponse
-    {
-        //TODO:
-        return response()->json('Edit user profile');
-    }
-
-
     public function delete_user(string $id)
     {
         $userToDelete = User::find($id);
@@ -48,5 +41,37 @@ class DashboardController extends Controller
         }
 
         return response()->json(['users' => $result, 'message' => 'success']);
+    }
+
+
+    public function edit_user(Request $request, string $id): JsonResponse
+    {
+        $user = User::find($id);
+        $profile = Profile::whereUserId($id)->first();
+
+        $user_data = [
+            'email' => $request->email,
+            'role' => $request->role,
+        ];
+
+        $profile_data = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+        ];
+
+        foreach ($user_data as $field=>$value) {
+            $user->$field = $value;
+        }
+
+        $user->save();
+
+        foreach ($profile_data as $field=>$value) {
+            $profile->$field = $value;
+        }
+
+        $profile->save();
+
+        return response()->json(['profile' => $profile]);
     }
 }

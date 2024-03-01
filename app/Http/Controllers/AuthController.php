@@ -73,9 +73,10 @@ class AuthController extends Controller
     }
 
 
-    public function edit_my_profile(): JsonResponse
+    public function edit_my_profile(Request $request): JsonResponse
     {
-        // TODO:
+        echo ($request);
+        
         return response()->json('Edit my profile');
     }
 

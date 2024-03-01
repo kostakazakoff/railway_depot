@@ -37,6 +37,6 @@ class DashboardController extends Controller
             return response()->json(['message' => 'fail']);
         }
 
-        return response()->json(['users' => [...$users], 'message' => 'success']);
+        return response()->json(['users' => $users, 'message' => 'success']);
     }
 }

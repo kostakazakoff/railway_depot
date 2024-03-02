@@ -75,9 +75,39 @@ class AuthController extends Controller
 
     public function edit_my_profile(Request $request): JsonResponse
     {
-        echo ($request);
-        
-        return response()->json('Edit my profile');
+        $user = auth()->user();
+
+        $profile = Profile::whereUserId($user->id)->first();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid password']);
+        }
+
+        $user_data = [
+            'email' => $request->email,
+            'password' => $request->new_password ?
+                Hash::make($request->new_password) :
+                Hash::make($request->password)
+        ];
+
+        $profile_data = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+        ];
+
+        foreach ($user_data as $field => $value) {
+            $user->$field = $value;
+        }
+
+        foreach ($profile_data as $field => $value) {
+            $profile->$field = $value;
+        }
+
+        $user->save();
+        $profile->save();
+
+        return response()->json(['message' => 'success']);
     }
 
 

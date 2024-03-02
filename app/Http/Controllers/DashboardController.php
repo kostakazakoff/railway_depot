@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $result = [];
 
         foreach ($users as $user) {
-            if ($user->role === 'superuser' || $user->id == auth()->user()->id) {
+            if ($user->id == auth()->user()->id) {
                 continue;
             }
             $id = $user['id'];

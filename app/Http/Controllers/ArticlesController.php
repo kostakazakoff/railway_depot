@@ -14,6 +14,8 @@ use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Requests\UpdateInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
+use App\Exceptions\AppException;
+
 
 class ArticlesController extends Controller
 {
@@ -27,10 +29,16 @@ class ArticlesController extends Controller
         $position = $request->query->get('position');
         $package = $request->query->get('package');
 
-        $articles = Article::filter($filter)
-            ->with('images')
-            ->with('stores')
-            ->get();
+        try {
+            $articles = Article::filter($filter)
+                ->with('images')
+                ->with('stores')
+                ->get();
+        } catch (AppException $e) {
+            return response()->json([
+                'message' => $e->getCode(),
+            ]);
+        }
 
         $totalCost = 0;
 

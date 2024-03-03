@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
+use App\Exceptions\AppException;
 
 
 class AuthController extends Controller
 {
+    const SUCCESS = 'success';
+
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -22,7 +24,10 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:4'],
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'fix errors', 'errors' => $validator->errors()], 500);
+            return response()->json([
+                'message' => AppException::invalidCredentials()->getMessage(),
+                'status' => AppException::invalidCredentials()->getCode()
+            ]);
         }
 
         $user = User::create([
@@ -34,14 +39,17 @@ class AuthController extends Controller
             'user_id' => $user->id
         ]);
 
-        return response()->json($user);
+        return response()->json(['message' => self::SUCCESS, 'user' => $user]);
     }
 
 
     public function login(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(Response::HTTP_UNAUTHORIZED);
+            return response()->json([
+                'message' => AppException::invalidCredentials()->getMessage(),
+                'status' => AppException::invalidCredentials()->getCode()
+            ]);
         }
 
         $user = auth()->user();
@@ -53,9 +61,9 @@ class AuthController extends Controller
         $cookie = cookie('jwt', $token, 24 * 60, httpOnly: false);
 
         return response([
+            'message' => self::SUCCESS,
             'user' => $user,
             'jwt' => $token,
-            'message' => 'success',
             'first_name' => $profile->first_name,
             'last_name' => $profile->last_name,
             'phone' => $profile->phone,
@@ -69,7 +77,7 @@ class AuthController extends Controller
 
         $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'success'])->withCookie($cookie);
+        return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
     }
 
 
@@ -80,7 +88,7 @@ class AuthController extends Controller
         $profile = Profile::whereUserId($user->id)->first();
 
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid password']);
+            return response()->json(['message' => 'Невалидна парола!']);
         }
 
         $user_data = [

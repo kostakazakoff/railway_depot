@@ -34,7 +34,10 @@ class DashboardController extends Controller
         $users = User::all()->load('profile');
 
         if (!$users) {
-            return response()->json(['message' => 'fail']);
+            return response()->json([
+                'message' => AppException::userNotFound()->getMessage(),
+                'status' => AppException::userNotFound()->getCode()
+            ]);
         }
 
         $result = [];
@@ -47,7 +50,7 @@ class DashboardController extends Controller
             $result[$id] = $user;
         }
 
-        return response()->json(['users' => $result, 'message' => 'success']);
+        return response()->json(['users' => $result, 'message' => self::SUCCESS]);
     }
 
 

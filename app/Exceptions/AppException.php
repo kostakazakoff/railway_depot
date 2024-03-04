@@ -24,6 +24,6 @@ class AppException extends \Exception
 
     public static function userNotFound(): AppException
     {
-        return new self(message: 'Потребителят не е намерен в базата данни!', code: 404);
+        return new self(message: 'Липсва в базата данни!', code: 404);
     }
 }

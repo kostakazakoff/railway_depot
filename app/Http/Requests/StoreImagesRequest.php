@@ -25,11 +25,11 @@ class StoreImagesRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $result = array([
+        $result = [
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]);
+        ];
         throw new HttpResponseException(response()->json($result));
     }
 
@@ -37,8 +37,8 @@ class StoreImagesRequest extends FormRequest
     public function messages()
     {
         return [
-            'images.*.mimes' => 'Допустимите формати са png, jpg, jpeg, webp',
-            'images.*.max' => 'Максимален размер на файла - 5MB',
+            'images.*.mimes' => 'Допустимите формати са png, jpg, jpeg, webp!',
+            'images.*.max' => 'Максимален размер на файла - 5MB!',
         ];
     }
 }

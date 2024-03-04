@@ -39,9 +39,9 @@ Route::controller(ArticlesController::class)
         Route::get('/{id}', 'show');
         Route::post('/edit/{id}', 'update');
         Route::post('/delete/{id}', 'delete');
-        Route::post('/restore/{id}', 'restoreArticle');
-        Route::get('/show-trash', 'getTrashed');
-        Route::post('/empty-trash', 'emptyTrash');
+        // Route::post('/restore/{id}', 'restoreArticle');
+        // Route::get('/show-trash', 'getTrashed');
+        // Route::post('/empty-trash', 'emptyTrash');
         Route::get('/{id}/inventories', 'articleInventories');
     });
 

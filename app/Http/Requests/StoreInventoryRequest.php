@@ -27,11 +27,11 @@ class StoreInventoryRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $result = array([
+        $result = [
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]);
+        ];
         throw new HttpResponseException(response()->json($result));
     }
 
@@ -39,11 +39,11 @@ class StoreInventoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'store_id.required' => 'Трябва да въведете склад',
-            'quantity.required' => 'Трябва да въведете количество',
-            'quantity.integer' => 'Количеството може да бъде само цяло число',
-            'quantity.min' => 'Количеството може да бъде само положително число',
-            'position.required' => 'Трябва да въведете позиция на артикула'
+            'store_id.required' => 'Трябва да въведете склад!',
+            'quantity.required' => 'Трябва да въведете количество!',
+            'quantity.integer' => 'Количеството може да бъде само цяло число!',
+            'quantity.min' => 'Количеството може да бъде само положително число!',
+            'position.required' => 'Трябва да въведете позиция на артикула!'
         ];
     }
 }

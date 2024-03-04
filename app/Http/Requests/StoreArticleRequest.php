@@ -26,11 +26,11 @@ class StoreArticleRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $result = array([
+        $result = [
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]);
+        ];
         throw new HttpResponseException(response()->json($result));
     }
 
@@ -38,11 +38,11 @@ class StoreArticleRequest extends FormRequest
     public function messages()
     {
         return [
-            'inventory_number.required' => 'Трябва да въведете инвентарен номер',
-            'description.required' => 'Трябва да въведете описание',
-            'price.required' => 'Трябва да въведете цена',
-            'price.numeric' => 'Цената трябва да бъде число',
-            'price.min' => 'Цената може да бъде само положително число',
+            'inventory_number.required' => 'Трябва да въведете инвентарен номер!',
+            'description.required' => 'Трябва да въведете описание!',
+            'price.required' => 'Трябва да въведете цена!',
+            'price.numeric' => 'Цената трябва да бъде число!',
+            'price.min' => 'Цената може да бъде само положително число!',
         ];
     }
 }

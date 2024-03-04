@@ -25,11 +25,11 @@ class UpdateInventoryRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $result = array([
+        $result = [
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]);
+        ];
         throw new HttpResponseException(response()->json($result));
     }
 

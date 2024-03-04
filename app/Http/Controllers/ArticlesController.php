@@ -92,8 +92,8 @@ class ArticlesController extends Controller
         ]);
     }
 
-    // TODO: Resize images
-    private function uploadImages($images, $articleId): void
+
+    protected function uploadImages($images, $articleId): void
     {
         foreach ($images as $image) {
 
@@ -105,8 +105,10 @@ class ArticlesController extends Controller
 
             $url = asset(self::IMAGES_DIR . '/' . $imageName);
 
+            $path = $imageLocation . '/' . $imageName;
+
             Image::create([
-                'path' => $imageLocation . '/' . $imageName,
+                'path' => $path,
                 'url' => $url,
                 'article_id' => $articleId
             ]);
@@ -114,7 +116,7 @@ class ArticlesController extends Controller
     }
 
 
-    private function handleImages($article, $imgRequest): void
+    protected function handleImages($article, $imgRequest): void
     {
         $files = $imgRequest->file('images');
 
@@ -139,11 +141,6 @@ class ArticlesController extends Controller
             'price' => $request->price
         ]);
 
-        dd($article);
-
-        // if ($article->success === false) {
-        //     dd($request->data);
-        // }
 
         $inventory = Inventory::create([
             'article_id' => $article->id,
@@ -164,9 +161,9 @@ class ArticlesController extends Controller
 
 
     public function update(
-        UpdateArticleRequest $request,
+        StoreArticleRequest $request,
         StoreImagesRequest $imgRequest,
-        UpdateInventoryRequest $inventoryRequest,
+        StoreInventoryRequest $inventoryRequest,
         string $id
     ): ?JsonResponse {
 

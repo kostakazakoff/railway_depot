@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AppException;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -9,16 +10,22 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    const SUCCESS = 'success';
+
     public function delete_user(string $id)
     {
         $userToDelete = User::find($id);
 
-        if ($userToDelete) {
-            $userToDelete->delete();
-            return response()->json(['message' => 'success']);
+        if (!$userToDelete) {
+            return response()->json([
+                'message' => AppException::userNotFound()->getMessage(),
+                'status' => AppException::userNotFound()->getCode()
+            ]);
         }
 
-        return response()->json(['message' => 'fail']);
+
+        $userToDelete->delete();
+        return response()->json(['message' => self::SUCCESS]);
     }
 
 
@@ -47,6 +54,14 @@ class DashboardController extends Controller
     public function edit_user(Request $request, string $id): JsonResponse
     {
         $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => AppException::userNotFound()->getMessage(),
+                'status' => AppException::userNotFound()->getCode()
+            ]);
+        }
+
         $profile = Profile::whereUserId($id)->first();
 
         $user_data = [
@@ -60,18 +75,18 @@ class DashboardController extends Controller
             'phone' => $request->phone,
         ];
 
-        foreach ($user_data as $field=>$value) {
+        foreach ($user_data as $field => $value) {
             $user->$field = $value;
         }
 
         $user->save();
 
-        foreach ($profile_data as $field=>$value) {
+        foreach ($profile_data as $field => $value) {
             $profile->$field = $value;
         }
 
         $profile->save();
 
-        return response()->json(['profile' => $profile]);
+        return response()->json(['message' => self::SUCCESS, 'profile' => $profile]);
     }
 }

@@ -21,4 +21,9 @@ class AppException extends \Exception
     {
         return new self(message: 'Моля, въведете правилни имейл и парола (минимум 4 символа)!', code: 403);
     }
+
+    public static function userNotFound(): AppException
+    {
+        return new self(message: 'Потребителят не е намерен в базата данни!', code: 404);
+    }
 }

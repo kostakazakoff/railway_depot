@@ -20,6 +20,7 @@ use App\Exceptions\AppException;
 class ArticlesController extends Controller
 {
     const IMAGES_DIR = 'images';
+    const SUCCESS = 'success';
 
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
@@ -29,14 +30,15 @@ class ArticlesController extends Controller
         $position = $request->query->get('position');
         $package = $request->query->get('package');
 
-        try {
-            $articles = Article::filter($filter)
-                ->with('images')
-                ->with('stores')
-                ->get();
-        } catch (AppException $e) {
+        $articles = Article::filter($filter)
+            ->with('images')
+            ->with('stores')
+            ->get();
+
+        if (!$articles) {
             return response()->json([
-                'message' => $e->getCode(),
+                'message' => AppException::articlesNotFound()->getMessage(),
+                'status' => AppException::articlesNotFound()->getCode()
             ]);
         }
 
@@ -83,10 +85,14 @@ class ArticlesController extends Controller
             $totalCost += $article->price * $article->inventory->quantity;
         }
 
-        return response()->json(['articles' => [...$articles], 'totalCost' => $totalCost]);
+        return response()->json([
+            'message' => self::SUCCESS,
+            'articles' => [...$articles],
+            'totalCost' => $totalCost
+        ]);
     }
 
-
+    // TODO: Resize images
     private function uploadImages($images, $articleId): void
     {
         foreach ($images as $image) {
@@ -133,6 +139,12 @@ class ArticlesController extends Controller
             'price' => $request->price
         ]);
 
+        dd($article);
+
+        // if ($article->success === false) {
+        //     dd($request->data);
+        // }
+
         $inventory = Inventory::create([
             'article_id' => $article->id,
             'store_id' => $inventoryRequest->store_id,
@@ -143,7 +155,11 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest);
 
-        return response()->json(['article' => $article, 'inventory' => $inventory]);
+        return response()->json([
+            'message' => self::SUCCESS,
+            'article' => $article,
+            'inventory' => $inventory
+        ]);
     }
 
 
@@ -190,7 +206,11 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest, $inventoryRequest);
 
-        return response()->json(['article' => $article, 'inventory' => $inventory]);
+        return response()->json([
+            'message' => self::SUCCESS,
+            'article' => $article,
+            'inventory' => $inventory
+        ]);
     }
 
 
@@ -202,7 +222,12 @@ class ArticlesController extends Controller
 
         $articleImages = $article?->images->all();
 
-        return response()->json(['article' => $article, 'images' => $articleImages, 'inventory' => $articleInventory]);
+        return response()->json([
+            'message' => self::SUCCESS,
+            'article' => $article,
+            'images' => $articleImages,
+            'inventory' => $articleInventory
+        ]);
     }
 
 
@@ -212,7 +237,7 @@ class ArticlesController extends Controller
 
         $article->delete();
 
-        return response()->json('Article deleted successfully');
+        return response()->json(['message' => self::SUCCESS]);
     }
 
 
@@ -220,26 +245,26 @@ class ArticlesController extends Controller
     {
         Artisan::call('model:prune');
 
-        return response()->json('Trash is empty');
+        return response()->json(['message' => self::SUCCESS]);
     }
 
 
-    public function restoreArticle($id): JsonResponse
-    {
-        $article = Article::onlyTrashed()->findOrFail($id);
-        $article->deleted_at = null;
+    // public function restoreArticle($id): JsonResponse
+    // {
+    //     $article = Article::onlyTrashed()->findOrFail($id);
+    //     $article->deleted_at = null;
 
-        $article->save();
+    //     $article->save();
 
-        return response()->json('Article ' . $article->slug . ' restored successfully');
-    }
+    //     return response()->json('Article ' . $article->slug . ' restored successfully');
+    // }
 
 
-    public function getTrashed(): JsonResponse
-    {
-        $trashedArticles = Article::onlyTrashed()->get();
-        dd($trashedArticles);
+    // public function getTrashed(): JsonResponse
+    // {
+    //     $trashedArticles = Article::onlyTrashed()->get();
+    //     dd($trashedArticles);
 
-        return response()->json(['trashed' => $trashedArticles]);
-    }
+    //     return response()->json(['trashed' => $trashedArticles]);
+    // }
 }

@@ -39,11 +39,11 @@ class StoreInventoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'store_id.required' => 'Store location field is required',
-            'quantity.required' => 'Quantity field is required',
-            'quantity.integer' => 'Quantity field has to be an integer',
-            'quantity.min' => 'Quantity has to be a positive number',
-            'position.required' => 'Position field is required'
+            'store_id.required' => 'Трябва да въведете склад',
+            'quantity.required' => 'Трябва да въведете количество',
+            'quantity.integer' => 'Количеството може да бъде само цяло число',
+            'quantity.min' => 'Количеството може да бъде само положително число',
+            'position.required' => 'Трябва да въведете позиция на артикула'
         ];
     }
 }

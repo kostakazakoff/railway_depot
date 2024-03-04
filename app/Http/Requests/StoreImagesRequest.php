@@ -18,7 +18,7 @@ class StoreImagesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'images.*' => 'required|mimes:png,jpg,jpeg,webp|max:5120',
+            'images.*' => 'mimes:png,jpg,jpeg,webp|max:5120',
         ];
     }
 
@@ -37,9 +37,8 @@ class StoreImagesRequest extends FormRequest
     public function messages()
     {
         return [
-            'images.required' => 'At least one image is required',
-            'images.*.mimes' => 'Available file formats are png, jpg, jpeg',
-            'images.*.max' => 'Maximum file size is 5MB',
+            'images.*.mimes' => 'Допустимите формати са png, jpg, jpeg, webp',
+            'images.*.max' => 'Максимален размер на файла - 5MB',
         ];
     }
 }

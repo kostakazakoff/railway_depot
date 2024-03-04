@@ -80,7 +80,7 @@ class AuthController extends Controller
         return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
     }
 
-    // TODO: error exception
+
     public function edit_my_profile(Request $request): JsonResponse
     {
         $user = auth()->user();
@@ -126,10 +126,10 @@ class AuthController extends Controller
 
         $profile->save();
 
-        return response()->json(['message' => self::SUCCESS]);
+        return response()->json(['message' => self::SUCCESS, 'user' => $user, 'profile' => $profile]);
     }
 
-    // TODO: error exception
+
     public function delete_me(Request $request): JsonResponse
     {
         $user = auth()->user();

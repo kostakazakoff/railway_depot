@@ -19,7 +19,7 @@ class StoreArticleRequest extends FormRequest
         return [
             'inventory_number' => 'required',
             'description' => 'required',
-            'price' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
         ];
     }
 
@@ -38,12 +38,11 @@ class StoreArticleRequest extends FormRequest
     public function messages()
     {
         return [
-            'inventory_number.required' => 'Inventory number field is required',
-            'inventory_number.unique' => 'This inventory number allready exists',
-            'description.required' => 'Description field is required',
-            'price.required' => 'Price field is required',
-            'price.integer' => 'Price has to be an integer',
-            'price.min' => 'Price has to be a positive number',
+            'inventory_number.required' => 'Трябва да въведете инвентарен номер',
+            'description.required' => 'Трябва да въведете описание',
+            'price.required' => 'Трябва да въведете цена',
+            'price.numeric' => 'Цената трябва да бъде число',
+            'price.min' => 'Цената може да бъде само положително число',
         ];
     }
 }

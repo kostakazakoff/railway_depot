@@ -80,15 +80,25 @@ class AuthController extends Controller
         return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
     }
 
-
+    // TODO: error exception
     public function edit_my_profile(Request $request): JsonResponse
     {
         $user = auth()->user();
 
+        if (!$user) {
+            return response()->json([
+                'message' => AppException::unauthorized()->getMessage(),
+                'status' => AppException::unauthorized()->getCode()
+            ]);
+        }
+
         $profile = Profile::whereUserId($user->id)->first();
 
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Невалидна парола!']);
+            return response()->json([
+                'message' => AppException::invalidPassword()->getMessage(),
+                'status' => AppException::invalidPassword()->getCode()
+            ]);
         }
 
         $user_data = [
@@ -113,22 +123,28 @@ class AuthController extends Controller
         }
 
         $user->save();
+
         $profile->save();
 
-        return response()->json(['message' => 'success']);
+        return response()->json(['message' => self::SUCCESS]);
     }
 
-
+    // TODO: error exception
     public function delete_me(Request $request): JsonResponse
     {
         $user = auth()->user();
 
-        if ($user) {
-            $cookie = Cookie::forget('jwt');
-            $user->delete();
-            return response()->json(['message' => 'success'])->withCookie($cookie);
+        if (!$user) {
+            return response()->json([
+                'message' => AppException::unauthorized()->getMessage(),
+                'status' => AppException::unauthorized()->getCode()
+            ]);
         }
 
-        return response()->json(['message' => 'fail']);
+        $cookie = Cookie::forget('jwt');
+
+        $user->delete();
+
+        return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
     }
 }

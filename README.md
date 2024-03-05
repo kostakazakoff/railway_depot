@@ -6,5 +6,5 @@
 
 <hr>
 <p align="center">
-<a href="https://youtu.be/tR6hB7IcMEg">VIDEO</a>
+<a href="https://youtu.be/tR6hB7IcMEg"  target="_blank">VIDEO</a>
 </p>

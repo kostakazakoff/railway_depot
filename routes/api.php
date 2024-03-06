@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\StoresController;
 
 
@@ -51,4 +52,12 @@ Route::controller(ImagesController::class)
     ->middleware('auth:sanctum')
     ->group(function () {
         Route::post('/delete', 'delete');
+    });
+
+
+Route::controller(LogController::class)
+    ->prefix('logs')
+    ->middleware('auth:sanctum', 'check.admin')
+    ->group(function () {
+        Route::get('/list', 'list');
     });

@@ -18,8 +18,8 @@ class DashboardController extends Controller
 
         if (!$userToDelete) {
             return response()->json([
-                'message' => AppException::notFound()->getMessage(),
-                'status' => AppException::notFound()->getCode()
+                'message' => AppException::notFound('такъв потребител')->getMessage(),
+                'status' => AppException::notFound('такъв потребител')->getCode()
             ]);
         }
 
@@ -35,8 +35,8 @@ class DashboardController extends Controller
 
         if (!$users) {
             return response()->json([
-                'message' => AppException::notFound()->getMessage(),
-                'status' => AppException::notFound()->getCode()
+                'message' => AppException::notFound('потребители')->getMessage(),
+                'status' => AppException::notFound('потребители')->getCode()
             ]);
         }
 
@@ -60,8 +60,8 @@ class DashboardController extends Controller
 
         if (!$user) {
             return response()->json([
-                'message' => AppException::notFound()->getMessage(),
-                'status' => AppException::notFound()->getCode()
+                'message' => AppException::notFound('такъв потребител')->getMessage(),
+                'status' => AppException::notFound('такъв потребител')->getCode()
             ]);
         }
 

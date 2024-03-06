@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\StoreImagesRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
-use App\Http\Requests\UpdateArticleRequest;
-use App\Http\Requests\UpdateInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
 
@@ -35,10 +33,10 @@ class ArticlesController extends Controller
             ->with('stores')
             ->get();
 
-        if (!$articles) {
+        if ($articles->isEmpty()) {
             return response()->json([
-                'message' => AppException::articlesNotFound()->getMessage(),
-                'status' => AppException::articlesNotFound()->getCode()
+                'message' => AppException::notFound('артикули')->getMessage(),
+                'status' => AppException::notFound('артикули')->getCode()
             ]);
         }
 
@@ -105,10 +103,8 @@ class ArticlesController extends Controller
 
             $url = asset(self::IMAGES_DIR . '/' . $imageName);
 
-            $path = $imageLocation . '/' . $imageName;
-
             Image::create([
-                'path' => $path,
+                'path' => $imageLocation . '/' . $imageName,
                 'url' => $url,
                 'article_id' => $articleId
             ]);

@@ -28,11 +28,6 @@ class LogController extends Controller
         ]);
     }
 
-    public function create(Request $request)
-    {
-        //TODO:
-    }
-
     public function delete(Request $request)
     {
         //TODO:

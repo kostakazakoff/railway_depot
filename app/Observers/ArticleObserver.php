@@ -9,23 +9,23 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleObserver
 {
-    
+
     public function created(Article $article): void
     {
         //
     }
 
-    
+
     public function updated(Article $article): void
     {
         //
     }
 
-    
+
     public function deleted(Article $article): void
     {
         $inventoryToDelete = DB::table('inventories')
-        ->where('inventories.article_id', $article->id);
+            ->where('inventories.article_id', $article->id);
 
         $inventoryToDelete->delete();
 
@@ -40,13 +40,13 @@ class ArticleObserver
         }
     }
 
-    
+
     public function restored(Article $article): void
     {
         //
     }
 
-    
+
     public function forceDeleted(Article $article): void
     {
         //

@@ -9,14 +9,14 @@ use App\Models\Store;
 
 class InventoryObserver
 {
-    public function created(Inventory $inventory): void
+    protected function handle($inventory, $operation)
     {
         $article = Article::find($inventory->article_id);
         $store = Store::find($inventory->store_id);
 
         Log::create([
             'user_id' => auth()->user()->id,
-            'created' => 'Артикул с инвентарен номер '
+            $operation => $article->description.' с инвентарен номер '
                 . $article->inventory_number
                 . ', цена '
                 . $article->price
@@ -29,20 +29,19 @@ class InventoryObserver
         ]);
     }
 
-    /**
-     * Handle the Inventory "updated" event.
-     */
+    public function created(Inventory $inventory): void
+    {
+        $this->handle($inventory, 'created');
+    }
+    
     public function updated(Inventory $inventory): void
     {
-        //
+        $this->handle($inventory, 'updated');
     }
-
-    /**
-     * Handle the Inventory "deleted" event.
-     */
+    
     public function deleted(Inventory $inventory): void
     {
-        //
+       //
     }
 
     /**

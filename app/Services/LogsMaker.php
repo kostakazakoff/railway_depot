@@ -13,9 +13,9 @@ class LogsMaker
                 . $article->inventory_number
                 . ', цена '
                 . $article->price
-                . ', количество '
+                . ' лв., количество '
                 . $inventory->quantity
-                . ', склад '
+                . ' бр., склад '
                 . $store->name
                 . ' от '
                 . auth()->user()->email

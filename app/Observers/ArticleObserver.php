@@ -8,19 +8,18 @@ use App\Models\Inventory;
 use App\Models\Log;
 use App\Models\Store;
 use App\Services\LogsMaker;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleObserver
 {
-    // protected function logData($article)
-    // {
-    //     $inventory = Inventory::whereArticleId($article->id)->first();
+    protected function logData($article)
+    {
+        $inventory = Inventory::whereArticleId($article->id)->first();
 
-    //     $store = Store::find($inventory->store_id);
+        $store = Store::find($inventory->store_id);
 
-    //     return [$inventory, $article, $store];
-    // }
+        return [$inventory, $article, $store];
+    }
 
     public function created(Article $article): void
     {
@@ -40,8 +39,7 @@ class ArticleObserver
 
         // LogsMaker::log('deleted', ...$dataForLoging);
 
-        $inventoryToDelete = DB::table('inventories')
-            ->where('inventories.article_id', $article->id);
+        $inventoryToDelete = Inventory::where('inventories.article_id', $article->id);
 
         $inventoryToDelete->delete();
 
@@ -54,6 +52,7 @@ class ArticleObserver
                 $image->delete();
             }
         }
+        // dd($inventoryToDelete);
 
         // Log::create([
         //     'user_id' => auth()->user()->id,

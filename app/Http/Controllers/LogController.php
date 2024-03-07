@@ -11,9 +11,11 @@ class LogController extends Controller
 {
     const SUCCESS = 'success';
 
-    public function list(LogFilter $filter)
+    public function list(LogFilter $filter, Request $request)
     {
         $logs = Log::filter($filter)->get();
+
+        $description = $request->query->get('description');
 
         if ($logs->isEmpty()) {
             return response()->json([
@@ -21,6 +23,16 @@ class LogController extends Controller
                 'status' => AppException::notFound('записи')->getCode()
             ]);
         }
+
+        $description &&
+            $logs = $logs
+            ->filter(function ($log) use ($description) {
+                return (
+                    strstr($log->created, $description) ||
+                    strstr($log->updated, $description) ||
+                    strstr($log->deleted, $description)
+                );
+            });
 
         return response()->json([
             'message' => self::SUCCESS,

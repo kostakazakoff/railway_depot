@@ -5,22 +5,10 @@ namespace App\Observers;
 use App\Models\Image;
 use App\Models\Article;
 use App\Models\Inventory;
-use App\Models\Log;
-use App\Models\Store;
-use App\Services\LogsMaker;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleObserver
 {
-    protected function logData($article)
-    {
-        $inventory = Inventory::whereArticleId($article->id)->first();
-
-        $store = Store::find($inventory->store_id);
-
-        return [$inventory, $article, $store];
-    }
-
     public function created(Article $article): void
     {
         //
@@ -35,10 +23,6 @@ class ArticleObserver
 
     public function deleted(Article $article): void
     {
-        // $dataForLoging = $this->logData($article);
-
-        // LogsMaker::log('deleted', ...$dataForLoging);
-
         $inventoryToDelete = Inventory::where('inventories.article_id', $article->id);
 
         $inventoryToDelete->delete();
@@ -52,12 +36,6 @@ class ArticleObserver
                 $image->delete();
             }
         }
-        // dd($inventoryToDelete);
-
-        // Log::create([
-        //     'user_id' => auth()->user()->id,
-        //     'deleted' => $article->description
-        // ]);
     }
 
 

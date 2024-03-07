@@ -239,32 +239,4 @@ class ArticlesController extends Controller
 
         return response()->json(['message' => self::SUCCESS]);
     }
-
-
-    // public function emptyTrash(): JsonResponse
-    // {
-    //     Artisan::call('model:prune');
-
-    //     return response()->json(['message' => self::SUCCESS]);
-    // }
-
-
-    // public function restoreArticle($id): JsonResponse
-    // {
-    //     $article = Article::onlyTrashed()->findOrFail($id);
-    //     $article->deleted_at = null;
-
-    //     $article->save();
-
-    //     return response()->json('Article ' . $article->slug . ' restored successfully');
-    // }
-
-
-    // public function getTrashed(): JsonResponse
-    // {
-    //     $trashedArticles = Article::onlyTrashed()->get();
-    //     dd($trashedArticles);
-
-    //     return response()->json(['trashed' => $trashedArticles]);
-    // }
 }

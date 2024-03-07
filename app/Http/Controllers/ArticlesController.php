@@ -13,7 +13,8 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
-
+use App\Models\Store;
+use App\Services\LogsMaker;
 
 class ArticlesController extends Controller
 {
@@ -228,7 +229,12 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
+        $inventory = Inventory::whereArticleId($id)->first();
+        $store = Store::find($inventory->store_id);
+
         $article->delete();
+
+        LogsMaker::log('deleted', $inventory, $article, $store);
 
         return response()->json(['message' => self::SUCCESS]);
     }

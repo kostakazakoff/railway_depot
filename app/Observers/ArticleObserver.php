@@ -15,8 +15,8 @@ class ArticleObserver
 {
     // protected function logData($article)
     // {
-    //     $inventory = Inventory::whereArticleId($article->id)->get();
-        
+    //     $inventory = Inventory::whereArticleId($article->id)->first();
+
     //     $store = Store::find($inventory->store_id);
 
     //     return [$inventory, $article, $store];
@@ -55,10 +55,10 @@ class ArticleObserver
             }
         }
 
-        Log::create([
-            'user_id' => auth()->user()->id,
-            'deleted' => $article->description
-        ]);
+        // Log::create([
+        //     'user_id' => auth()->user()->id,
+        //     'deleted' => $article->description
+        // ]);
     }
 
 

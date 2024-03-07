@@ -22,14 +22,9 @@ class AppException extends \Exception
         return new self(message: 'Моля, въведете правилни имейл и парола (минимум 4 символа)!', code: 403);
     }
 
-    public static function notFound(): AppException
+    public static function notFound($item): AppException
     {
-        return new self(message: 'Липсва в базата данни!', code: 404);
-    }
-
-    public static function articlesNotFound(): AppException
-    {
-        return new self(message: 'Не са открити артикули с подадените параметри!', code: 404);
+        return new self(message: 'Няма '.$item.' в базата данни!', code: 404);
     }
 
     public static function invalidPassword(): AppException

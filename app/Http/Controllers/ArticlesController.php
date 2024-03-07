@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\StoreImagesRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
-use App\Http\Requests\UpdateArticleRequest;
-use App\Http\Requests\UpdateInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
-
+use App\Models\Store;
+use App\Services\LogsMaker;
 
 class ArticlesController extends Controller
 {
@@ -35,10 +34,10 @@ class ArticlesController extends Controller
             ->with('stores')
             ->get();
 
-        if (!$articles) {
+        if ($articles->isEmpty()) {
             return response()->json([
-                'message' => AppException::articlesNotFound()->getMessage(),
-                'status' => AppException::articlesNotFound()->getCode()
+                'message' => AppException::notFound('артикули')->getMessage(),
+                'status' => AppException::notFound('артикули')->getCode()
             ]);
         }
 
@@ -105,10 +104,8 @@ class ArticlesController extends Controller
 
             $url = asset(self::IMAGES_DIR . '/' . $imageName);
 
-            $path = $imageLocation . '/' . $imageName;
-
             Image::create([
-                'path' => $path,
+                'path' => $imageLocation . '/' . $imageName,
                 'url' => $url,
                 'article_id' => $articleId
             ]);
@@ -232,36 +229,14 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
+        $inventory = Inventory::whereArticleId($id)->first();
+
+        $store = Store::find($inventory->store_id);
+
         $article->delete();
 
-        return response()->json(['message' => self::SUCCESS]);
-    }
-
-
-    public function emptyTrash(): JsonResponse
-    {
-        Artisan::call('model:prune');
+        LogsMaker::log('deleted', $inventory, $article, $store);
 
         return response()->json(['message' => self::SUCCESS]);
     }
-
-
-    // public function restoreArticle($id): JsonResponse
-    // {
-    //     $article = Article::onlyTrashed()->findOrFail($id);
-    //     $article->deleted_at = null;
-
-    //     $article->save();
-
-    //     return response()->json('Article ' . $article->slug . ' restored successfully');
-    // }
-
-
-    // public function getTrashed(): JsonResponse
-    // {
-    //     $trashedArticles = Article::onlyTrashed()->get();
-    //     dd($trashedArticles);
-
-    //     return response()->json(['trashed' => $trashedArticles]);
-    // }
 }

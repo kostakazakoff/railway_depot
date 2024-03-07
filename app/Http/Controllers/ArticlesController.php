@@ -230,7 +230,7 @@ class ArticlesController extends Controller
         $article = Article::findOrFail($id);
 
         $inventory = Inventory::whereArticleId($id)->first();
-        
+
         $store = Store::find($inventory->store_id);
 
         $article->delete();
@@ -241,12 +241,12 @@ class ArticlesController extends Controller
     }
 
 
-    public function emptyTrash(): JsonResponse
-    {
-        Artisan::call('model:prune');
+    // public function emptyTrash(): JsonResponse
+    // {
+    //     Artisan::call('model:prune');
 
-        return response()->json(['message' => self::SUCCESS]);
-    }
+    //     return response()->json(['message' => self::SUCCESS]);
+    // }
 
 
     // public function restoreArticle($id): JsonResponse

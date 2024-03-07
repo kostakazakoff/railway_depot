@@ -6,42 +6,31 @@ use App\Models\Article;
 use App\Models\Inventory;
 use App\Models\Log;
 use App\Models\Store;
+use App\Services\LogsMaker;
 
 class InventoryObserver
 {
-    protected function handle($inventory, $operation)
+    protected function logData($inventory)
     {
         $article = Article::find($inventory->article_id);
         $store = Store::find($inventory->store_id);
 
-        Log::create([
-            'user_id' => auth()->user()->id,
-            $operation => $article->description.' с инвентарен номер '
-                . $article->inventory_number
-                . ', цена '
-                . $article->price
-                . ', количество '
-                . $inventory->quantity
-                . ', склад'
-                . $store->name
-                .' от '
-                .auth()->user()->email
-        ]);
+        return [$inventory, $article, $store];
     }
 
     public function created(Inventory $inventory): void
     {
-        $this->handle($inventory, 'created');
+        LogsMaker::log('created', ...$this->logData($inventory));
     }
-    
+
     public function updated(Inventory $inventory): void
     {
-        $this->handle($inventory, 'updated');
+        LogsMaker::log('updated', ...$this->logData($inventory));
     }
-    
+
     public function deleted(Inventory $inventory): void
     {
-       //
+        //
     }
 
     /**

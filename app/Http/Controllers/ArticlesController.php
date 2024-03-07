@@ -230,6 +230,7 @@ class ArticlesController extends Controller
         $article = Article::findOrFail($id);
 
         $inventory = Inventory::whereArticleId($id)->first();
+        
         $store = Store::find($inventory->store_id);
 
         $article->delete();

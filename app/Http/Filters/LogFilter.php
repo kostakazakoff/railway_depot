@@ -27,4 +27,9 @@ class LogFilter extends Filter
         ->orWhere('updated', 'like', '%{$value}%')
         ->orWhere('deleted', 'like', '%{$value}%');
     }
+
+    public function user(string $value = null): Builder
+    {
+        return $this->builder->where('user_id', '=', $value);
+    }
 }

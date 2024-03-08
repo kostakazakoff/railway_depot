@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Exceptions\AppException;
 use App\Http\Filters\LogFilter;
 use App\Models\Log;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
     const SUCCESS = 'success';
 
-    public function list(LogFilter $filter, Request $request)
+    public function list(LogFilter $filter, Request $request): JsonResponse
     {
         $logs = Log::filter($filter)->get();
 
@@ -40,8 +43,26 @@ class LogController extends Controller
         ]);
     }
 
-    public function delete(Request $request)
+    public function deleteOldLogs(): JsonResponse
     {
-        //TODO:
+        $threeMonthsAgo = Carbon::now()->subMonths(3);
+
+        $oldLogs = DB::table('logs')
+        ->where('created_at', '<', $threeMonthsAgo)
+        ->get();
+
+        if ($oldLogs->isEmpty()) {
+            return response()->json([
+                'message' => 'There is no logs to delete'
+            ]);
+        }
+        
+        foreach ($oldLogs as $log) {
+            $log->delete();
+        }
+
+        return response()->json([
+            'message' => self::SUCCESS
+        ]);
     }
 }

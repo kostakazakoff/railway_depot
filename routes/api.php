@@ -12,6 +12,7 @@ use App\Http\Controllers\StoresController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::get('stores', [StoresController::class, 'list']);
+Route::post('logs/delete_old', [LogController::class, 'deleteOldLogs']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

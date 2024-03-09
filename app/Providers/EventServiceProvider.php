@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\ArticleCRUD;
+use App\Listeners\ArticleCreateLog;
 use App\Models\Article;
 use App\Models\Inventory;
 use App\Observers\ArticleObserver;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ArticleCRUD::class => [
+            ArticleCreateLog::class,
+        ],
     ];
 
     /**
@@ -29,8 +34,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Article::observe(ArticleObserver::class);
-        Inventory::observe(InventoryObserver::class);
+        //
     }
 
     /**

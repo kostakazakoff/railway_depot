@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+// TODO: Log creation events
 class LogController extends Controller
 {
     const SUCCESS = 'success';

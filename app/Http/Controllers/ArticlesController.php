@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ArticleCRUD;
 use App\Models\Image;
 use App\Models\Article;
 use App\Models\Inventory;
 use App\Http\Filters\DepotFilter;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\StoreImagesRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
-use App\Models\Store;
-use App\Services\LogsMaker;
 
 class ArticlesController extends Controller
 {
@@ -149,6 +147,8 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest);
 
+        ArticleCRUD::dispatch($article, 'created');
+
         return response()->json([
             'message' => self::SUCCESS,
             'article' => $article,
@@ -200,6 +200,8 @@ class ArticlesController extends Controller
 
         $this->handleImages($article, $imgRequest, $inventoryRequest);
 
+        ArticleCRUD::dispatch($article, 'updated');
+
         return response()->json([
             'message' => self::SUCCESS,
             'article' => $article,
@@ -229,13 +231,9 @@ class ArticlesController extends Controller
     {
         $article = Article::findOrFail($id);
 
-        $inventory = Inventory::whereArticleId($id)->first();
-
-        $store = Store::find($inventory->store_id);
+        ArticleCRUD::dispatch($article, 'deleted');
 
         $article->delete();
-
-        LogsMaker::log('deleted', $inventory, $article, $store);
 
         return response()->json(['message' => self::SUCCESS]);
     }

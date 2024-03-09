@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Article;
 use App\Models\Image;
 use App\Models\Inventory;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleObserver
@@ -39,7 +40,7 @@ class ArticleObserver
         if ($files) {
             foreach ($files as $file) {
                 $image = Image::find($file->id);
-                Storage::delete(($image->path));
+                File::delete($image->path);
                 $image->delete();
             }
         }

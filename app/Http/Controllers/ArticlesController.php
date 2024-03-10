@@ -193,7 +193,7 @@ class ArticlesController extends Controller
         ];
 
         foreach ($inventory_request as $field => $value) {
-            if ($value) $inventory->$field = $value;
+            $inventory->$field = $value;
         }
 
         $inventory->save();

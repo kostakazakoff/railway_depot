@@ -176,7 +176,7 @@ class ArticlesController extends Controller
         ];
 
         foreach ($article_request as $field => $value) {
-            $value && $article->$field = $value;
+            $article->$field = $value;
         }
 
         !$article->quantity <= 0

@@ -19,13 +19,25 @@ class LogFilter extends Filter
         $date = date('Y-m-d', strtotime($value));
         return $this->builder->where('created_at', '<=', $date);
     }
-    
+
     public function item(string $value = null): Builder
     {
         return $this->builder
-        ->where('created', 'like', '%{$value}%')
-        ->orWhere('updated', 'like', '%{$value}%')
-        ->orWhere('deleted', 'like', '%{$value}%');
+            ->where('created', 'like', '%{$value}%')
+            ->orWhere('updated', 'like', '%{$value}%')
+            ->orWhere('deleted', 'like', '%{$value}%');
+    }
+
+    public function operation(string $value = null): Builder
+    {
+        switch ($value) {
+            case 'created':
+                return $this->builder->whereNotNull('created');
+            case 'updated':
+                return $this->builder->whereNotNull('updated');
+            case 'deleted':
+                return $this->builder->whereNotNull('deleted');
+        }
     }
 
     public function user(string $value = null): Builder

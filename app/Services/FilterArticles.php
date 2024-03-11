@@ -36,12 +36,6 @@ class FilterArticles
                 return strstr($article->inventory->position, $position);
             });
 
-        $package &&
-            $articles = $articles
-            ->filter(function ($article) use ($package) {
-                return strstr($article->inventory->package, $package);
-            });
-
         return $articles;
     }
 }

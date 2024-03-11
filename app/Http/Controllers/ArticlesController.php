@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
 use App\Services\FilterArticles;
 
+
 class ArticlesController extends Controller
 {
     const IMAGES_DIR = 'images';
@@ -23,10 +24,11 @@ class ArticlesController extends Controller
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
         $totalCost = 0;
-        
+
         $articles = Article::filter($filter)
             ->with('images')
             ->with('stores')
+            ->with('inventory')
             ->get();
 
         if ($articles->isEmpty()) {
@@ -36,17 +38,11 @@ class ArticlesController extends Controller
             ]);
         }
 
-        foreach ($articles as $article) {
-            $inventory = Inventory::whereArticleId($article->id)->first();
-            $inventory
-                ? $article['inventory'] = $inventory
-                : $article['inventory'] = null;
-        }
-
         $filteredArticles = FilterArticles::by($articles, $request);
 
         foreach ($filteredArticles as $article) {
-            $totalCost += $article->price * $article->inventory->quantity;
+                $totalCost += $article->price * $article->inventory->quantity;
+            
         }
 
         return response()->json([
@@ -179,11 +175,11 @@ class ArticlesController extends Controller
 
     public function show(string $id): ?JsonResponse
     {
-        $article = Article::find($id);
+        $article = Article::findOrFail($id);
 
         $articleInventory = Inventory::whereArticleId($id)->get();
 
-        $articleImages = $article?->images->all();
+        $articleImages = $article->images?->all();
 
         return response()->json([
             'message' => self::SUCCESS,

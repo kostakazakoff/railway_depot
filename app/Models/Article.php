@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Concerns\Filterable;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Article extends Model
 {
@@ -32,5 +32,11 @@ class Article extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class, 'article_id', 'id');
+    }
+
+    
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(Inventory::class, 'article_id', 'id');
     }
 }

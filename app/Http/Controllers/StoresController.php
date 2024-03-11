@@ -29,6 +29,16 @@ class StoresController extends Controller
     }
 
 
+    public function edit(CreateStoreRequest $request, string $id): JsonResponse
+    {
+        $store = Store::findOrFail($id);
+
+        $store->update($request->name);
+
+        return response()->json(['message' => self::SUCCESS, 'store' => $store]);
+    }
+
+
     public function delete(string $id)
     {
         $store = Store::findOrFail($id);

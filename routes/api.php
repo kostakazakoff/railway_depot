@@ -11,7 +11,7 @@ use App\Http\Controllers\StoresController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::get('stores', [StoresController::class, 'list']);
+Route::get('stores/list', [StoresController::class, 'list']);
 Route::post('logs/delete_old', [LogController::class, 'deleteOldLogs']);
 
 
@@ -20,6 +20,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('delete_me',  [AuthController::class, 'delete_me']);
     Route::post('edit_my_profile', [AuthController::class, 'edit_my_profile']);
 });
+
+
+Route::controller(StoresController::class)
+    ->prefix('stores')
+    ->middleware('auth:sanctum', 'check.superuser')
+    ->group(function () {
+        Route::create('create', 'create');
+        Route::create('edit', 'edit');
+        Route::delete('delete', 'delete');
+    });
 
 
 Route::controller(DashboardController::class)

@@ -7,6 +7,12 @@ use Illuminate\Http\JsonResponse;
 
 class AppException extends \Exception
 {
+    public static function notSuperuser(): AppException
+    {
+        return new self(message: 'Неоторизиран достъп! Нужни са права с най-високо ниво на достъп', code: 401);
+    }
+
+
     public static function notAdmin(): AppException
     {
         return new self(message: 'Неоторизиран достъп! Нужни са администраторски права', code: 401);

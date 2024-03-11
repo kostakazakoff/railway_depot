@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsAdmin
+class EnsureUserIsSuperuser
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class EnsureUserIsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
-        if ($user && in_array($user->role, ['superuser', 'admin'])) {
+        if ($user && in_array($user->role, ['superuser'])) {
             return $next($request);
         }
 

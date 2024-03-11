@@ -13,10 +13,11 @@ class LogsMaker
         $inventory = Inventory::whereArticleId($article->id)->first();
 
         $store = Store::find($inventory->store_id);
-        
+
         Log::create([
             'user_id' => auth()->user()->id,
-            $operation => $article->description . ' с инвентарен номер '
+            $operation => $article->description
+                . ' с инвентарен номер '
                 . $article->inventory_number
                 . ', цена '
                 . $article->price

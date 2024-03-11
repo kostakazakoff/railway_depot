@@ -13,6 +13,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exceptions\AppException;
+use App\Services\FilterArticles;
 
 class ArticlesController extends Controller
 {
@@ -21,12 +22,8 @@ class ArticlesController extends Controller
 
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
-        $store = $request->query->get('store');
-        $min_quantity = $request->query->get('min_quantity');
-        $max_quantity = $request->query->get('max_quantity');
-        $position = $request->query->get('position');
-        $package = $request->query->get('package');
-
+        $totalCost = 0;
+        
         $articles = Article::filter($filter)
             ->with('images')
             ->with('stores')
@@ -39,8 +36,6 @@ class ArticlesController extends Controller
             ]);
         }
 
-        $totalCost = 0;
-
         foreach ($articles as $article) {
             $inventory = Inventory::whereArticleId($article->id)->first();
             $inventory
@@ -48,43 +43,15 @@ class ArticlesController extends Controller
                 : $article['inventory'] = null;
         }
 
-        $store &&
-            $articles = $articles
-            ->filter(function ($article) use ($store) {
-                return $article->stores[0]->id == $store;
-            });
+        $filteredArticles = FilterArticles::by($articles, $request);
 
-        $min_quantity &&
-            $articles = $articles
-            ->filter(function ($article) use ($min_quantity) {
-                return $article->inventory->quantity >= $min_quantity;
-            });
-
-        $max_quantity &&
-            $articles = $articles
-            ->filter(function ($article) use ($max_quantity) {
-                return $article->inventory->quantity <= $max_quantity;
-            });
-
-        $position &&
-            $articles = $articles
-            ->filter(function ($article) use ($position) {
-                return strstr($article->inventory->position, $position);
-            });
-
-        $package &&
-            $articles = $articles
-            ->filter(function ($article) use ($package) {
-                return strstr($article->inventory->package, $package);
-            });
-
-        foreach ($articles as $article) {
+        foreach ($filteredArticles as $article) {
             $totalCost += $article->price * $article->inventory->quantity;
         }
 
         return response()->json([
             'message' => self::SUCCESS,
-            'articles' => [...$articles],
+            'articles' => [...$filteredArticles],
             'totalCost' => $totalCost
         ]);
     }

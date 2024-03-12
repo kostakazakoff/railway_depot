@@ -46,6 +46,7 @@ class User extends Authenticatable
     {
         return $this
         ->BelongsToMany(Store::class)
-        ->withTimestamps();
+        ->withTimestamps()
+        ->as('responsibilities');
     }
 }

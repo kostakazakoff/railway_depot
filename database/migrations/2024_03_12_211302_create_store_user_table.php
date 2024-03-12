@@ -8,20 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user_store', function (Blueprint $table) {
+        Schema::create('store_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('store_id');
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
     
     public function down(): void
     {
-        Schema::dropIfExists('user_store');
+        Schema::dropIfExists('store_user');
     }
 };

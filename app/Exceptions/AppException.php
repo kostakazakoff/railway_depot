@@ -37,4 +37,9 @@ class AppException extends \Exception
     {
         return new self(message: 'Грешна парола!', code: 401);
     }
+
+    public static function notActiveUser($user): AppException
+    {
+        return new self(message: 'Потребителят '.$user.' не е активен! Моля, назначете му роля.', code: 401);
+    }
 }

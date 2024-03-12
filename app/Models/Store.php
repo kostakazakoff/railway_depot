@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Store extends Model
 {
@@ -19,8 +20,16 @@ class Store extends Model
         'name'
     ];
 
-    public function articles()
+    public function articles(): belongsToMany
     {
         return $this->belongsToMany(Article::class, 'inventories');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(User::class)
+            ->withTimestamps()
+            ->as('responsibles');
     }
 }

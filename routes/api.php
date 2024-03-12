@@ -26,9 +26,9 @@ Route::controller(StoresController::class)
     ->prefix('stores')
     ->middleware('auth:sanctum', 'check.superuser')
     ->group(function () {
-        Route::create('create', 'create');
-        Route::create('edit', 'edit');
-        Route::delete('delete', 'delete');
+        Route::post('create', 'create');
+        Route::post('edit{id}', 'edit');
+        Route::post('delete/{id}', 'delete');
     });
 
 

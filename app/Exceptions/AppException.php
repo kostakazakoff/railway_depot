@@ -37,4 +37,14 @@ class AppException extends \Exception
     {
         return new self(message: 'Грешна парола!', code: 401);
     }
+
+    public static function notActiveUser($user): AppException
+    {
+        return new self(message: 'Потребителят '.$user.' не е активен! Моля, назначете му роля.', code: 401);
+    }
+
+    public static function storeIsNotEmpty($store): AppException
+    {
+        return new self(message: 'Склад '.$store.' не е празен! За да изтриете склада, първо трябва да премахнете или преместите наличностите в друг склад.', code: 401);
+    }
 }

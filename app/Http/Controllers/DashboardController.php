@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
     public function users_list(): JsonResponse
     {
-        $users = User::all()->load('profile');
+        $users = User::all()->load('profile')->load('stores');
 
         if (!$users) {
             return response()->json([

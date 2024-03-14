@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StoresController;
-
+use App\Http\Controllers\UsersResponsibilitiesController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -22,13 +22,23 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+Route::controller(UsersResponsibilitiesController::class)
+->prefix('users/responsibilities/')
+->middleware('auth:sanctum', 'check.admin')
+->group(function () {
+    Route::post('attach/{user_id}', 'attachResponsibilities');
+    Route::post('detach/{user_id}', 'detachResponsibilities');
+    Route::get('show/{user_id}', 'showResponsibilities');
+});
+
+
 Route::controller(StoresController::class)
     ->prefix('stores')
     ->middleware('auth:sanctum', 'check.superuser')
     ->group(function () {
-        Route::create('create', 'create');
-        Route::create('edit', 'edit');
-        Route::delete('delete', 'delete');
+        Route::post('create', 'create');
+        Route::post('edit/{id}', 'edit');
+        Route::post('delete/{id}', 'delete');
     });
 
 
@@ -51,9 +61,6 @@ Route::controller(ArticlesController::class)
         Route::get('/{id}', 'show');
         Route::post('/edit/{id}', 'update');
         Route::post('/delete/{id}', 'delete');
-        // Route::post('/restore/{id}', 'restoreArticle');
-        // Route::get('/show-trash', 'getTrashed');
-        // Route::post('/empty-trash', 'emptyTrash');
         Route::get('/{id}/inventories', 'articleInventories');
     });
 

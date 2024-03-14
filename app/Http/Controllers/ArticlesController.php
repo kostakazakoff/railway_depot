@@ -31,11 +31,10 @@ class ArticlesController extends Controller
             ->with('inventory')
             ->get();
 
-        if ($articles->isEmpty()) {
-            return response()->json([
-                'message' => AppException::notFound('артикули')->getMessage(),
-                'status' => AppException::notFound('артикули')->getCode()
-            ]);
+        foreach ($articles as $article) {
+            if (!$article->inventory) {
+                $article->delete();
+            }
         }
 
         $filteredArticles = FilterArticles::by($articles, $request);
@@ -98,7 +97,6 @@ class ArticlesController extends Controller
             'description' => $request->description,
             'price' => $request->price
         ]);
-
 
         $inventory = Inventory::create([
             'article_id' => $article->id,

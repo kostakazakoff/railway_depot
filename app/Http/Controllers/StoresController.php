@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AppException;
 use App\Http\Requests\CreateStoreRequest;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
@@ -42,6 +43,15 @@ class StoresController extends Controller
     public function delete(string $id)
     {
         $store = Store::findOrFail($id);
+
+        $storeIsNotEmpty = $store->articles->isNotEmpty();
+
+        if ($storeIsNotEmpty) {
+            return response()->json([
+                'message' => AppException::storeIsNotEmpty($store->name)->getMessage(),
+                'status' => AppException::storeIsNotEmpty($store->name)->getCode()
+            ]);
+        }
 
         $store->delete();
 

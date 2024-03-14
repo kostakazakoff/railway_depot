@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\AppExceptions;
+use App\Exceptions\AppException;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +21,6 @@ class EnsureUserHasRole
             return $next($request);
         }
 
-        throw AppExceptions::notAstaff();
+        throw AppException::unauthorized();
     }
 }

@@ -37,7 +37,7 @@ Route::controller(StoresController::class)
     ->middleware('auth:sanctum', 'check.superuser')
     ->group(function () {
         Route::post('create', 'create');
-        Route::post('edit{id}', 'edit');
+        Route::post('edit/{id}', 'edit');
         Route::post('delete/{id}', 'delete');
     });
 

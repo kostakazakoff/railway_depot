@@ -33,7 +33,7 @@ class StoresController extends Controller
     {
         $store = Store::findOrFail($id);
 
-        $store->update($request->name);
+        $store->update($request->all());
 
         return response()->json(['message' => self::SUCCESS, 'store' => $store]);
     }

@@ -16,12 +16,12 @@ class ArticleCRUD
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $operation;
-    public $article;
+    public $object;
     
     public function __construct(Article $article, $operation)
     {
         $this->operation = $operation;
-        $this->article = $article;
+        $this->object = $article;
     }
 
     /**

@@ -16,12 +16,12 @@ class StoreCRUD
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $operation;
-    public $store;
+    public $object;
 
     public function __construct(Store $store, $operation)
     {
         $this->operation = $operation;
-        $this->store = $store;
+        $this->object = $store;
     }
 
     /**

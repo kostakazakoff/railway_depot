@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use App\Events\ArticleCRUD;
 use App\Events\StoreCRUD;
-use App\Listeners\ArticleCreateLog;
-use App\Listeners\StoreCreateLog;
+use App\Listeners\CreateLog;
 use App\Models\Article;
 use App\Observers\ArticleObserver;
 use Illuminate\Auth\Events\Registered;
@@ -25,10 +24,10 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         ArticleCRUD::class => [
-            ArticleCreateLog::class,
+            CreateLog::class,
         ],
         StoreCRUD::class => [
-            StoreCreateLog::class,
+            CreateLog::class,
         ],
     ];
 

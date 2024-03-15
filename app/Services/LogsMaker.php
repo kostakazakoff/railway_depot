@@ -30,6 +30,7 @@ class LogsMaker
                     . ' от '
                     . auth()->user()->email
             ]);
+            
         } else if ($object instanceof Store) {
             Log::create([
                 'user_id' => auth()->user()->id,

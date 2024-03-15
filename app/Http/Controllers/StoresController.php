@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\StoreCRUD;
 use App\Exceptions\AppException;
 use App\Http\Requests\CreateStoreRequest;
 use App\Models\Store;
@@ -26,6 +27,8 @@ class StoresController extends Controller
             'name' => $request->name
         ]);
 
+        StoreCRUD::dispatch($store, 'created');
+
         return response()->json(['message' => self::SUCCESS, 'store' => $store]);
     }
 
@@ -35,6 +38,8 @@ class StoresController extends Controller
         $store = Store::findOrFail($id);
 
         $store->update($request->all());
+
+        StoreCRUD::dispatch($store, 'updated');
 
         return response()->json(['message' => self::SUCCESS, 'store' => $store]);
     }
@@ -54,6 +59,8 @@ class StoresController extends Controller
         }
 
         $store->delete();
+
+        StoreCRUD::dispatch($store, 'deleted');
 
         return response()->json(['message' => self::SUCCESS]);
     }

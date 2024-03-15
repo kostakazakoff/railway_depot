@@ -12,7 +12,6 @@ use App\Http\Requests\StoreImagesRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
 use Symfony\Component\HttpFoundation\Request;
-use App\Exceptions\AppException;
 use App\Services\FilterArticles;
 
 

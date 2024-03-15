@@ -6,7 +6,7 @@ use App\Models\Inventory;
 use App\Models\Log;
 use App\Models\Store;
 
-class LogsMaker
+class ArticlesLogsMaker
 {
     public static function log($operation, $article)
     {

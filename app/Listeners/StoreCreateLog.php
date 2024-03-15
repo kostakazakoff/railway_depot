@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Services\ArticlesLogsMaker;
+use App\Services\StoresLogsMaker;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ArticleCreateLog
+class StoreCreateLog
 {
     /**
      * Create the event listener.
@@ -19,8 +19,8 @@ class ArticleCreateLog
     public function handle(object $event): void
     {
         $operation = $event->operation;
-        $article = $event->article;
+        $store = $event->store;
 
-        ArticlesLogsMaker::log($operation, $article);
+        StoresLogsMaker::log($operation, $store);
     }
 }

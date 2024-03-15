@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\ArticleCRUD;
 use App\Events\StoreCRUD;
+use App\Events\UserResponsibilityChange;
 use App\Listeners\CreateLog;
 use App\Models\Article;
 use App\Observers\ArticleObserver;
@@ -27,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
             CreateLog::class,
         ],
         StoreCRUD::class => [
+            CreateLog::class,
+        ],
+        UserResponsibilityChange::class => [
             CreateLog::class,
         ],
     ];

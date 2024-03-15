@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Inventory;
 use App\Models\Log;
 use App\Models\Store;
+use App\Models\User;
 
 class LogsMaker
 {
@@ -37,6 +38,22 @@ class LogsMaker
                 $operation => $object->name
                     . ' от '
                     . auth()->user()->email
+            ]);
+
+        } else if ($object instanceof User) {
+            $listOfStores = [];
+
+            foreach ($object->stores as $store) {
+                array_push($listOfStores, $store->name);
+            }
+
+            $userStores = join(', ', $listOfStores);
+
+            Log::create([
+                'user_id' => auth()->user()->id,
+                $operation => $userStores
+                .' - отговорност на '
+                . $object->email
             ]);
         }
     }

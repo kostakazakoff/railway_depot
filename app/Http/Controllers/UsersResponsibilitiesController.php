@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UserResponsibilityChange;
+use App\Events\UserCRUD;
 use App\Exceptions\AppException;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +23,7 @@ class UsersResponsibilitiesController extends Controller
 
         $user->stores()->syncWithoutDetaching($request->all());
 
-        UserResponsibilityChange::dispatch($user, 'updated');
+        UserCRUD::dispatch($user, 'updated');
 
         return response()->json(['message' => 'success', 'user' => $user->load('stores')]);
     }
@@ -34,6 +34,8 @@ class UsersResponsibilitiesController extends Controller
         $user = User::findOrFail($user_id);
 
         $user->stores()->detach($request->all());
+
+        UserCRUD::dispatch($user, 'updated');
 
         return response()->json(['message' => 'success', 'user' => $user->load('stores')]);
     }

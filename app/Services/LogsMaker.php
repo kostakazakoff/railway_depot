@@ -28,18 +28,16 @@ class LogsMaker
                     . $inventory->quantity
                     . ' бр., склад '
                     . $store->name
-                    . ' от '
+                    . ', от '
                     . auth()->user()->email
             ]);
-            
         } else if ($object instanceof Store) {
             Log::create([
                 'user_id' => auth()->user()->id,
                 $operation => $object->name
-                    . ' от '
+                    . ', от '
                     . auth()->user()->email
             ]);
-
         } else if ($object instanceof User) {
             $listOfStores = [];
 
@@ -49,11 +47,18 @@ class LogsMaker
 
             $userStores = join(', ', $listOfStores);
 
+            $userHasStores = '';
+            $userStores && $userHasStores = ', отговорен за '; 
+
             Log::create([
                 'user_id' => auth()->user()->id,
-                $operation => $userStores
-                .' - отговорност на '
-                . $object->email
+                $operation => $object->email
+                    . ' - '
+                    . $object->role
+                    . $userHasStores
+                    . $userStores
+                    . ', от '
+                    . auth()->user()->email
             ]);
         }
     }

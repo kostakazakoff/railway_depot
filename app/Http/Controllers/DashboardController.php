@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserCRUD;
 use App\Exceptions\AppException;
 use App\Models\Profile;
 use App\Models\User;
@@ -23,8 +24,10 @@ class DashboardController extends Controller
             ]);
         }
 
-
         $userToDelete->delete();
+
+        UserCRUD::dispatch($userToDelete, 'deleted');
+
         return response()->json(['message' => self::SUCCESS]);
     }
 
@@ -83,6 +86,8 @@ class DashboardController extends Controller
         }
 
         $user->save();
+
+        UserCRUD::dispatch($user, 'updated');
 
         foreach ($profile_data as $field => $value) {
             $profile->$field = $value;

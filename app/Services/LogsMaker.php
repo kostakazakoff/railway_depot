@@ -34,7 +34,8 @@ class LogsMaker
         } else if ($object instanceof Store) {
             Log::create([
                 'user_id' => auth()->user()->id,
-                $operation => $object->name
+                $operation => 'Склад №:'
+                    . $object->name
                     . ', от '
                     . auth()->user()->email
             ]);
@@ -48,7 +49,7 @@ class LogsMaker
             $userStores = join(', ', $listOfStores);
 
             $userHasStores = '';
-            $userStores && $userHasStores = ', отговорен за '; 
+            $userStores && $userHasStores = ', отговорен за ';
 
             Log::create([
                 'user_id' => auth()->user()->id,

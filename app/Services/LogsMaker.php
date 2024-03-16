@@ -8,59 +8,78 @@ use App\Models\Log;
 use App\Models\Store;
 use App\Models\User;
 
+
 class LogsMaker
 {
+
     public static function log($operation, $object)
     {
-        if ($object instanceof Article) {
-            $inventory = Inventory::whereArticleId($object->id)->first();
+        $object instanceof Article &&
+            self::createArticleLog($operation, $object);
+        $object instanceof Store &&
+            self::createStoreLog($operation, $object);
+        $object instanceof User &&
+            self::createUserLog($operation, $object);
+    }
 
-            $store = Store::find($inventory->store_id);
 
-            Log::create([
-                'user_id' => auth()->user()->id,
-                $operation => $object->description
-                    . ' с инвентарен номер '
-                    . $object->inventory_number
-                    . ', цена '
-                    . $object->price
-                    . ' лв., количество '
-                    . $inventory->quantity
-                    . ' бр., склад '
-                    . $store->name
-                    . ', от '
-                    . auth()->user()->email
-            ]);
-        } else if ($object instanceof Store) {
-            Log::create([
-                'user_id' => auth()->user()->id,
-                $operation => 'Склад №:'
-                    . $object->name
-                    . ', от '
-                    . auth()->user()->email
-            ]);
-        } else if ($object instanceof User) {
-            $listOfStores = [];
+    private static function createArticleLog($operation, $article)
+    {
+        $inventory = Inventory::whereArticleId($article->id)->first();
 
-            foreach ($object->stores as $store) {
-                array_push($listOfStores, $store->name);
-            }
+        $store = Store::find($inventory->store_id);
 
-            $userStores = join(', ', $listOfStores);
+        Log::create([
+            'user_id' => auth()->user()->id,
+            $operation => $article->description
+                . ' с инвентарен номер '
+                . $article->inventory_number
+                . ', цена '
+                . $article->price
+                . ' лв., количество '
+                . $inventory->quantity
+                . ' бр., склад '
+                . $store->name
+                . ', от '
+                . auth()->user()->email
+        ]);
+    }
 
-            $userHasStores = '';
-            $userStores && $userHasStores = ', отговорен за ';
+    private static function createStoreLog($operation, $store)
+    {
+        Log::create([
+            'user_id' => auth()->user()->id,
+            $operation => 'Склад №:'
+                . $store->name
+                . ', от '
+                . auth()->user()->email
+        ]);
+    }
 
-            Log::create([
-                'user_id' => auth()->user()->id,
-                $operation => $object->email
-                    . ' - '
-                    . $object->role
-                    . $userHasStores
-                    . $userStores
-                    . ', от '
-                    . auth()->user()->email
-            ]);
+    private static function createUserLog($operation, $user)
+    {
+        $listOfStores = [];
+
+        foreach ($user->stores as $store) {
+            array_push($listOfStores, $store->name);
         }
+
+        $userStores = join(', ', $listOfStores);
+
+        $userHasStores = '';
+
+        $userStores &&
+        $userHasStores = ', отговорен за склад №';
+
+        Log::create([
+            'user_id' => auth()->user()->id,
+            $operation => $user->email
+                . ' - '
+                . $user->role
+                . $userHasStores
+                . $userStores
+                . ', от '
+                . auth()->user()->email
+        ]);
     }
 }

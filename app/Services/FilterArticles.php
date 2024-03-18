@@ -16,7 +16,6 @@ class FilterArticles
         !$admin &&
             $articles = $articles
             ->filter(function ($article) use ($userResponsibility) {
-                // dd($article->stores[0]->id);
                 return in_array($article->stores[0]->id, $userResponsibility);
             });
 

@@ -10,7 +10,6 @@ class FilterArticles
         $min_quantity = $request->query->get('min_quantity');
         $max_quantity = $request->query->get('max_quantity');
         $position = $request->query->get('position');
-        $package = $request->query->get('package');
 
         $store &&
             $articles = $articles

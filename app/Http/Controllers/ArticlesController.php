@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreImagesRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\StoreInventoryRequest;
+use App\Models\Store;
 use Symfony\Component\HttpFoundation\Request;
 use App\Services\FilterArticles;
 
@@ -23,6 +24,8 @@ class ArticlesController extends Controller
     public function list(Request $request, DepotFilter $filter): JsonResponse
     {
         $totalCost = 0;
+
+        $userResponsibility =  auth()->user()->stores->pluck('id');
 
         $articles = Article::filter($filter)
             ->with('images')

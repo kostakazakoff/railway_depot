@@ -10,6 +10,15 @@ class FilterArticles
         $min_quantity = $request->query->get('min_quantity');
         $max_quantity = $request->query->get('max_quantity');
         $position = $request->query->get('position');
+        $userResponsibility = auth()->user()->stores->pluck('id')->all();
+        $admin = auth()->user()->role == 'admin' || auth()->user()->role == 'superuser';
+
+        !$admin &&
+            $articles = $articles
+            ->filter(function ($article) use ($userResponsibility) {
+                // dd($article->stores[0]->id);
+                return in_array($article->stores[0]->id, $userResponsibility);
+            });
 
         $store &&
             $articles = $articles
@@ -34,6 +43,8 @@ class FilterArticles
             ->filter(function ($article) use ($position) {
                 return strstr($article->inventory->position, $position);
             });
+
+
 
         return $articles;
     }

@@ -25,7 +25,7 @@ class ArticlesController extends Controller
     {
         $totalCost = 0;
 
-        $userResponsibility =  auth()->user()->stores->pluck('id');
+        $userResponsibility =  auth()->user()->stores->pluck('id')->all();
 
         $articles = Article::filter($filter)
             ->with('images')
@@ -126,6 +126,11 @@ class ArticlesController extends Controller
         StoreInventoryRequest $inventoryRequest,
         string $id
     ): ?JsonResponse {
+
+
+        // $userResponsibility =  auth()->user()->stores->pluck('id')->all();
+        // dd(in_array($request->store_id, $userResponsibility));
+
 
         $article = Article::findOrFail($id);
 

@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'check.role' => \App\Http\Middleware\EnsureUserHasRole::class,
         'check.admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         'check.superuser' => \App\Http\Middleware\EnsureUserIsSuperuser::class,
+        'check.userIsAuthorizedForStore' => \App\Http\Middleware\EnsureUserIsAuthorizedForStore::class,
     ];
 }

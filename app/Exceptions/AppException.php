@@ -23,6 +23,11 @@ class AppException extends \Exception
         return new self(message: 'Нямате достъп. Свържете се с вашия администратор', code: 401);
     }
 
+    public static function unauthorizedForStore()
+    {
+        return new self(message: 'Нямате достъп до този склад. Свържете се с вашия администратор', code: 401);
+    }
+
     public static function invalidCredentials(): AppException
     {
         return new self(message: 'Моля, въведете правилни имейл и парола (минимум 4 символа)!', code: 403);

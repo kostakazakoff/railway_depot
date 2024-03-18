@@ -57,11 +57,11 @@ Route::controller(ArticlesController::class)
     ->middleware('auth:sanctum', 'check.role')
     ->group(function () {
         Route::get('/', 'list');
-        Route::post('/store', 'store');
-        Route::get('/{id}', 'show');
-        Route::post('/edit/{id}', 'update');
-        Route::post('/delete/{id}', 'delete');
         Route::get('/{id}/inventories', 'articleInventories');
+        Route::post('/store', 'store')->middleware('check.userIsAuthorizedForStore');
+        Route::get('/{id}', 'show')->middleware('check.userIsAuthorizedForStore');
+        Route::post('/edit/{id}', 'update')->middleware('check.userIsAuthorizedForStore');
+        Route::post('/delete/{id}', 'delete')->middleware('check.userIsAuthorizedForStore');
     });
 
 

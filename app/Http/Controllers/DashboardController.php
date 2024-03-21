@@ -61,6 +61,8 @@ class DashboardController extends Controller
     {
         $user = User::find($id);
 
+        $user = $user->load('stores');
+
         if (!$user) {
             return response()->json([
                 'message' => AppException::notFound('такъв потребител')->getMessage(),
@@ -94,6 +96,10 @@ class DashboardController extends Controller
         }
 
         $profile->save();
+
+        count($request->responsibilities) == 0 ?
+        $user->stores()->detach() :
+        $user->stores()->sync(array_diff($request->responsibilities, ['0']));
 
         return response()->json(['message' => self::SUCCESS, 'profile' => $profile]);
     }

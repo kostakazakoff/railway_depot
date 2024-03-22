@@ -11,12 +11,18 @@ class EnsureUserIsAuthorizedForStore
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $userResponsibility = auth()->user()->stores->pluck('id')->all();
+        $user = auth()->user();
+        
+        $userResponsibility = $user->stores->pluck('id')->all();
 
-        if (in_array($request->store_id, $userResponsibility)) {
+        if (
+            in_array($request->store_id, $userResponsibility) ||
+            $user->role == 'admin' ||
+            $user->role == 'superuser'
+        ) {
             return $next($request);
         }
-        
+
         throw AppException::unauthorizedForStore();
     }
 }

@@ -23,13 +23,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::controller(UsersResponsibilitiesController::class)
-->prefix('users/responsibilities/')
-->middleware('auth:sanctum', 'check.admin')
-->group(function () {
-    Route::post('attach/{user_id}', 'attachResponsibilities');
-    Route::post('detach/{user_id}', 'detachResponsibilities');
-    Route::get('show/{user_id}', 'showResponsibilities');
-});
+    ->prefix('users/responsibilities/')
+    ->middleware('auth:sanctum', 'check.admin')
+    ->group(function () {
+        Route::post('attach/{user_id}', 'attachResponsibilities');
+        Route::post('detach/{user_id}', 'detachResponsibilities');
+        Route::get('show/{user_id}', 'showResponsibilities');
+    });
 
 
 Route::controller(StoresController::class)

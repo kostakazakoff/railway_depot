@@ -89,8 +89,6 @@ class DashboardController extends Controller
 
         $user->save();
 
-        UserCRUD::dispatch($user, 'updated');
-
         foreach ($profile_data as $field => $value) {
             $profile->$field = $value;
         }
@@ -98,6 +96,8 @@ class DashboardController extends Controller
         $profile->save();
 
         $user->stores()->sync($request->responsibilities);
+
+        UserCRUD::dispatch($user, 'updated');
 
         return response()->json(['message' => self::SUCCESS, 'profile' => $profile]);
     }

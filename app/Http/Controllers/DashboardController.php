@@ -97,9 +97,7 @@ class DashboardController extends Controller
 
         $profile->save();
 
-        count($request->responsibilities) == 0 ?
-        $user->stores()->detach() :
-        $user->stores()->sync(array_diff($request->responsibilities, ['0']));
+        $user->stores()->sync($request->responsibilities);
 
         return response()->json(['message' => self::SUCCESS, 'profile' => $profile]);
     }

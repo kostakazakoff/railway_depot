@@ -11,6 +11,8 @@ class Log extends Model
 {
     use HasFactory, Filterable;
 
+    protected $table = 'applogs';
+
     protected $fillable = [
         'user_id',
         'created',

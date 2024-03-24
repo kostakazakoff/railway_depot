@@ -48,7 +48,7 @@ class LogController extends Controller
     {
         $threeMonthsAgo = Carbon::now()->subMonths(1);
 
-        $oldLogs = DB::table('logs')
+        $oldLogs = DB::table('applogs')
         ->where('created_at', '<', $threeMonthsAgo)
         ->get();
 

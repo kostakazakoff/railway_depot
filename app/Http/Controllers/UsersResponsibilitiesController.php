@@ -21,7 +21,6 @@ class UsersResponsibilitiesController extends Controller
             ]);
         }
 
-        
         $user->async()
             ->stores()
             ->syncWithoutDetaching($request->all())

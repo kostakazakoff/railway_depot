@@ -33,11 +33,11 @@ class ArticlesController extends Controller
             ->with('inventory')
             ->get();
 
-        foreach ($articles as $article) {
-            if (!$article->inventory) {
-                $article->delete();
-            }
-        }
+        // foreach ($articles as $article) {
+        //     if (!$article->inventory) {
+        //         $article->delete();
+        //     }
+        // }
 
         $filteredArticles = FilterArticles::by($articles, $request);
 
@@ -126,11 +126,6 @@ class ArticlesController extends Controller
         StoreInventoryRequest $inventoryRequest,
         string $id
     ): ?JsonResponse {
-
-
-        // $userResponsibility =  auth()->user()->stores->pluck('id')->all();
-        // dd(in_array($request->store_id, $userResponsibility));
-
 
         $article = Article::findOrFail($id);
 

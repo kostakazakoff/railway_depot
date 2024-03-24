@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\File;
 
 class ImagesController extends Controller
 {
-    
     public function delete(Request $request): JsonResponse
     {
         $imageIds = $request->all();

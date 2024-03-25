@@ -46,10 +46,10 @@ class LogController extends Controller
 
     public function deleteOldLogs(): JsonResponse
     {
-        $threeMonthsAgo = Carbon::now()->subMonths(1);
+        $period = Carbon::now()->subMonths(1);
 
         $oldLogs = DB::table('applogs')
-        ->where('created_at', '<', $threeMonthsAgo)
+        ->where('created_at', '<', $period)
         ->get();
 
         if ($oldLogs->isEmpty()) {

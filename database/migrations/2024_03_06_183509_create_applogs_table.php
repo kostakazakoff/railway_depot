@@ -23,4 +23,3 @@ return new class extends Migration
         Schema::dropIfExists('applogs');
     }
 };
-// TODO: Fix onDelete user foreign key restriction

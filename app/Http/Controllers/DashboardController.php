@@ -61,6 +61,8 @@ class DashboardController extends Controller
     {
         $user = User::find($id);
 
+        $user->stores()->sync($request->responsibilities);
+
         $user = $user->load('stores');
 
         if (!$user) {
@@ -95,10 +97,8 @@ class DashboardController extends Controller
 
         $profile->save();
 
-        $user->stores()->sync($request->responsibilities);
-
         UserCRUD::dispatch($user, 'updated');
 
-        return response()->json(['message' => self::SUCCESS, 'profile' => $profile]);
+        return response()->json(['message' => self::SUCCESS, 'profile' => $profile, 'user' => $user->load('stores')]);
     }
 }

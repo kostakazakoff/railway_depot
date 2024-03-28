@@ -21,10 +21,11 @@ class UsersResponsibilitiesController extends Controller
             ]);
         }
 
-        $user->async()
+        $user
             ->stores()
-            ->syncWithoutDetaching($request->all())
-            ->then(UserCRUD::dispatch($user, 'updated'));
+            ->syncWithoutDetaching($request->all());
+
+        UserCRUD::dispatch($user, 'updated');
 
         return response()->json(['message' => 'success', 'user' => $user->load('stores')]);
     }

@@ -11,6 +11,7 @@ use App\Http\Controllers\UsersResponsibilitiesController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('reset_password/{user_id}', [AuthController::class, 'resetPassword']);
 Route::get('stores/list', [StoresController::class, 'list']);
 Route::post('logs/delete_old', [LogController::class, 'deleteOldLogs']);
 

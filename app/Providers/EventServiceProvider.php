@@ -6,6 +6,7 @@ use App\Events\ArticleCRUD;
 use App\Events\StoreCRUD;
 use App\Events\UserCRUD;
 use App\Listeners\CreateLog;
+use App\Listeners\NotifyUserForPasswordReset;
 use App\Models\Article;
 use App\Observers\ArticleObserver;
 use Illuminate\Auth\Events\Registered;
@@ -33,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         UserCRUD::class => [
             CreateLog::class,
         ],
+        NotifyUserForPasswordReset::class => [
+            
+        ]
     ];
 
     /**

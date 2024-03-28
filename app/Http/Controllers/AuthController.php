@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ResetPassword;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -147,5 +148,15 @@ class AuthController extends Controller
         $user->delete();
 
         return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
+    }
+
+
+    public function resetPassword(Request $request, string $user_id): JsonResponse
+    {
+        $user = User::find($user_id);
+        
+        ResetPassword::dispatch($user);
+
+        return response()->json(['message' => self::SUCCESS]);
     }
 }

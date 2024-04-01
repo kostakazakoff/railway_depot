@@ -15,6 +15,7 @@ use App\Exceptions\AppException;
 use App\Http\Requests\ChangeForgotenPasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Listeners\NotifyUserForPasswordReset;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -192,6 +193,11 @@ class AuthController extends Controller
                 'status' => AppException::passwordResetFail()->getCode()
             ]);
         }
+
+        // $user = User::whereEmail($request->email)->first();
+        
+        // EventsNotifyUserForPasswordReset::dispatch();
+        // TODO:
 
         return response()->json([
             'message' => self::SUCCESS,

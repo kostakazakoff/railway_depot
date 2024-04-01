@@ -6,9 +6,10 @@ use App\Events\ArticleCRUD;
 use App\Events\SendPasswordResetToken;
 use App\Events\StoreCRUD;
 use App\Events\UserCRUD;
+use App\Events\NotifyUserForPasswordReset;
 use App\Listeners\CreateLog;
-use App\Listeners\NotifyUserForPasswordReset;
 use App\Listeners\SendPasswordReset;
+use App\Listeners\SendPasswordResetConfirmation;
 use App\Models\Article;
 use App\Observers\ArticleObserver;
 use Illuminate\Auth\Events\Registered;
@@ -40,7 +41,7 @@ class EventServiceProvider extends ServiceProvider
             SendPasswordReset::class,
         ],
         NotifyUserForPasswordReset::class => [
-            
+            SendPasswordResetConfirmation::class,
         ],
     ];
 

@@ -158,7 +158,16 @@ class AuthController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        $status = SendPasswordResetToken::dispatch($request->only('email'));
+        $user = User::whereEmail($request->only('email'))->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => AppException::notFound('такъв потребител')->getMessage(),
+                'status' => AppException::notFound('такъв потребител')->getCode()
+            ]);
+        }
+
+        SendPasswordResetToken::dispatch($request->only('email'));
 
         return response()->json(['message' => self::SUCCESS]);
     }

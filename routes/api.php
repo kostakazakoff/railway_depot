@@ -11,7 +11,14 @@ use App\Http\Controllers\UsersResponsibilitiesController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('reset_password/{user_id}', [AuthController::class, 'resetPassword']);
+
+Route::post('forgot_password', [AuthController::class, 'forgotPassword'])
+    ->middleware('guest')
+    ->name('password.reset');
+Route::post('reset_password/{token}', [AuthController::class, 'resetPassword'])
+    ->name('reset-password');
+Route::post('change_forgoten_password', [AuthController::class, 'changeForgotenPassword']);
+
 Route::get('stores/list', [StoresController::class, 'list']);
 Route::post('logs/delete_old', [LogController::class, 'deleteOldLogs']);
 

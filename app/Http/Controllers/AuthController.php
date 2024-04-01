@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ResetPassword;
+use App\Events\SendPasswordResetToken;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Exceptions\AppException;
+use App\Http\Requests\ChangeForgotenPasswordRequest;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -151,12 +156,57 @@ class AuthController extends Controller
     }
 
 
-    public function resetPassword(Request $request, string $user_id): JsonResponse
+    public function forgotPassword(ForgotPasswordRequest $request)
     {
-        $user = User::find($user_id);
-        
-        ResetPassword::dispatch($user);
+        $status = SendPasswordResetToken::dispatch($request->only('email'));
 
         return response()->json(['message' => self::SUCCESS]);
+    }
+
+
+    // public function resetPassword(ResetPasswordRequest $request, string $token): JsonResponse
+    // {
+    //     $user = User::whereEmail($request->email)?->first();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => AppException::notFound('такъв потребител')->getMessage(),
+    //             'status' => AppException::notFound('такъв потребител')->getCode()
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'message' => self::SUCCESS,
+    //         'user' => $user,
+    //         'token' => $token
+    //     ]);
+    // }
+
+
+    public function changeForgotenPassword(ChangeForgotenPasswordRequest $request): JsonResponse
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                // event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== 'passwords.reset') {
+            return response()->json([
+                'message' => AppException::passwordResetFail()->getMessage(),
+                'status' => AppException::passwordResetFail()->getCode()
+            ]);
+        }
+
+        return response()->json([
+            'message' => self::SUCCESS,
+        ]);
     }
 }

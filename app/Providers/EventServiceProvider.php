@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Events\ArticleCRUD;
+use App\Events\SendPasswordResetToken;
 use App\Events\StoreCRUD;
 use App\Events\UserCRUD;
 use App\Listeners\CreateLog;
 use App\Listeners\NotifyUserForPasswordReset;
+use App\Listeners\SendPasswordReset;
 use App\Models\Article;
 use App\Observers\ArticleObserver;
 use Illuminate\Auth\Events\Registered;
@@ -34,9 +36,12 @@ class EventServiceProvider extends ServiceProvider
         UserCRUD::class => [
             CreateLog::class,
         ],
+        SendPasswordResetToken::class => [
+            SendPasswordReset::class,
+        ],
         NotifyUserForPasswordReset::class => [
             
-        ]
+        ],
     ];
 
     /**

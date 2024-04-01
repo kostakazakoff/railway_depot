@@ -52,4 +52,9 @@ class AppException extends \Exception
     {
         return new self(message: 'Склад '.$store.' не е празен! За да изтриете склада, първо трябва да премахнете или преместите наличностите в друг склад.', code: 401);
     }
+
+    public static function passwordResetFail(): AppException
+    {
+        return new self(message: 'Неуспешна операция за смяна на паролата.', code: 401);
+    }
 }

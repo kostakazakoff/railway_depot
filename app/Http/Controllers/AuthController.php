@@ -173,25 +173,6 @@ class AuthController extends Controller
     }
 
 
-    // public function resetPassword(ResetPasswordRequest $request, string $token): JsonResponse
-    // {
-    //     $user = User::whereEmail($request->email)?->first();
-
-    //     if (!$user) {
-    //         return response()->json([
-    //             'message' => AppException::notFound('такъв потребител')->getMessage(),
-    //             'status' => AppException::notFound('такъв потребител')->getCode()
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'message' => self::SUCCESS,
-    //         'user' => $user,
-    //         'token' => $token
-    //     ]);
-    // }
-
-
     public function changeForgotenPassword(ChangeForgotenPasswordRequest $request): JsonResponse
     {
         $status = Password::reset(
@@ -202,8 +183,6 @@ class AuthController extends Controller
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();
-
-                // event(new PasswordReset($user));
             }
         );
 

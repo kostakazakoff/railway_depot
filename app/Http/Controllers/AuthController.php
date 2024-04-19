@@ -155,7 +155,7 @@ class AuthController extends Controller
     }
 
 
-    public function forgotPassword(ForgotPasswordRequest $request)
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $user = User::whereEmail($request->only('email'))->first();
 

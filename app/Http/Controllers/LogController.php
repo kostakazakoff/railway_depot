@@ -44,6 +44,7 @@ class LogController extends Controller
         ]);
     }
 
+        //TODO:
     public function deleteOldLogs(): JsonResponse
     {
         $period = Carbon::now()->subMonths(1);
@@ -59,6 +60,7 @@ class LogController extends Controller
         }
         
         foreach ($oldLogs as $log) {
+            dd($log);
             $log->delete();
         }
 

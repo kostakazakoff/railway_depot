@@ -20,7 +20,7 @@ Route::post('reset_password/{token}', [AuthController::class, 'resetPassword'])
 Route::post('change_forgoten_password', [AuthController::class, 'changeForgotenPassword']);
 
 Route::get('stores/list', [StoresController::class, 'list']);
-Route::post('logs/delete_old', [LogController::class, 'deleteOldLogs']);
+Route::post('logs/delete_old', [LogController::class, 'handleOldLogs']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -45,7 +45,7 @@ class LogController extends Controller
     }
 
         //TODO: Schedule: Save logs to file, delete logs
-    public function deleteOldLogs(): JsonResponse
+    public function handleOldLogs(): JsonResponse
     {
         $period = Carbon::now()->subMonths(1);
 

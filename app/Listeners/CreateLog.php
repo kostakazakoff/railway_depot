@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Services\LogsMaker;
+use App\Services\LogsHandler;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -21,6 +21,6 @@ class CreateLog
         $operation = $event->operation;
         $object = $event->object;
 
-        LogsMaker::log($operation, $object);
+        LogsHandler::log($operation, $object);
     }
 }

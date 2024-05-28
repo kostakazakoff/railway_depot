@@ -9,7 +9,7 @@ use App\Models\Store;
 use App\Models\User;
 
 
-class LogsMaker
+class LogsHandler
 {
 
     public static function log($operation, $object)

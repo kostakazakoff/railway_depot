@@ -25,10 +25,8 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            [
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:4',
-            ]
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:4',
         ];
     }
 
@@ -51,8 +49,7 @@ class RegisterUserRequest extends FormRequest
             'email.email' => 'Невалиден имейл!',
             'email.max' => 'Невалиден имейл!',
             'email.unique' => 'Този имейл вече съществува в базата данни!',
-            'password.required' => 'Моля, въведете парола (минимум 4 символа).',
-            'password.required' => 'Паролата трябва да съдържа минимум 4 символа.',
+            'password.required' => 'Въведете парола (минимум 4 символа).',
         ];
     }
 }

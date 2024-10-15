@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Exceptions\AppException;
 use App\Http\Requests\ChangeForgotenPasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\RegisterUserRequest;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -22,20 +23,8 @@ class AuthController extends Controller
 {
     const SUCCESS = 'success';
 
-    public function register(Request $request): JsonResponse
+    public function register(RegisterUserRequest $request): JsonResponse
     {
-        // TODO: Create RegisterRequest with a validation messages
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:4'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => AppException::invalidCredentials()->getMessage(),
-                'status' => AppException::invalidCredentials()->getCode()
-            ]);
-        }
-
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password)

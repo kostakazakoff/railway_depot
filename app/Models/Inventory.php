@@ -20,3 +20,5 @@ class Inventory extends Model
         'position'
     ];
 }
+
+// TODO: HasOne article

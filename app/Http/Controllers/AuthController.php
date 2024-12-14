@@ -46,6 +46,7 @@ class AuthController extends Controller
             ]);
         }
 
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         $profile = Profile::whereUserId($user->id)->first();
@@ -74,9 +75,10 @@ class AuthController extends Controller
         return response()->json(['message' => self::SUCCESS])->withCookie($cookie);
     }
 
-
+    
     public function edit_my_profile(Request $request): JsonResponse
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         if (!$user) {
@@ -126,6 +128,7 @@ class AuthController extends Controller
 
     public function delete_me(Request $request): JsonResponse
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         if (!$user) {

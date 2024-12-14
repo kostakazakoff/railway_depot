@@ -54,7 +54,7 @@ class ArticlesController extends Controller
     }
 
 
-    protected function uploadImages($images, $articleId): void
+    private function uploadImages($images, $articleId): void
     {
         foreach ($images as $image) {
 
@@ -75,7 +75,7 @@ class ArticlesController extends Controller
     }
 
 
-    protected function handleImages($article, $imgRequest): void
+    private function handleImages($article, $imgRequest): void
     {
         $files = $imgRequest->file('images');
 
